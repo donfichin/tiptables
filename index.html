@@ -1,7 +1,18 @@
 
 <!DOCTYPE html>
 <html lang="es">
-
+<header>
+ <div>
+  <div class="logo">TIP<span>TOPS</span></div>
+  <div class="muted">TODOS SABEMOS ALGO. COMPARTILO.</div>
+ </div>
+ <div class="row" style="align-items:center;justify-content:flex-end">
+  <span id="usuario-header" class="muted hidden"></span>
+  <button class="light hidden" id="mi-perfil" onclick="mostrarPerfil()">Mi perfil</button>
+  <button class="light hidden" id="salir-header" onclick="cerrarSesion()">Salir</button>
+  <button class="green" onclick="document.getElementById('crear').scrollIntoView({behavior:'smooth'})">＋ Compartir TIP</button>
+ </div>
+</header>
 <body>
 <header>
  <div><div class="logo">TIP<span>TOPS</span></div><div class="muted">TODOS SABEMOS ALGO. COMPARTILO.</div></div>
