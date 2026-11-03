@@ -1,72 +1,234 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#111827"><title>TIPTOPS — Todos sabemos algo</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TIPTOPS — Todos sabemos algo</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--ink:#111827;--muted:#667085;--lime:#c7f36b;--paper:#f5f6f2;--line:#e7e9e2}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px Inter,system-ui,Arial,sans-serif}
-header{height:66px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,calc((100vw - 1100px)/2));position:sticky;top:0;z-index:5}
-.logo{font-size:25px;font-weight:950;letter-spacing:-1.5px}.logo span{color:#78a92b}.tag{font-size:11px;color:var(--muted);display:block;letter-spacing:0}
-button{border:0;border-radius:12px;padding:11px 15px;font-weight:750;cursor:pointer;background:var(--ink);color:#fff}button.secondary{background:#eef1e8;color:var(--ink)}button.lime{background:var(--lime);color:var(--ink)}
-.shell{max-width:1100px;margin:24px auto;padding:0 18px;display:grid;grid-template-columns:220px minmax(0,620px) 220px;gap:22px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px;margin-bottom:15px}
-h2{font-size:19px;margin:0 0 12px}h3{font-size:15px;margin:0 0 8px}.muted{color:var(--muted);font-size:13px}
-.navitem{padding:10px;border-radius:10px;cursor:pointer;margin:3px 0}.navitem.active,.navitem:hover{background:#eff5e5;font-weight:750}
-.chip{display:inline-block;border:1px solid var(--line);padding:7px 10px;border-radius:20px;margin:4px 3px 0 0;font-size:12px;cursor:pointer}.chip.active{background:var(--lime);border-color:var(--lime);font-weight:800}
-.feedhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.tip{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;margin-bottom:18px}
-.tipvisual{height:270px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;color:white;background:linear-gradient(135deg,#344c3c,#8cae55);position:relative}
-.tipvisual .emoji{font-size:72px;display:block;margin-bottom:12px}.tipvisual strong{font-size:24px;line-height:1.15;display:block;max-width:420px}.tipvisual small{display:block;margin-top:10px;opacity:.85}
-.tipbody{padding:16px}.tipmeta{font-size:12px;color:var(--muted);margin-bottom:8px}.tipbody p{margin:8px 0 12px;line-height:1.5}
-.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{font-size:12px;padding:9px 12px}.actions button.on{background:#e9f6d3;color:#263b12;outline:1px solid #b7dc7d}
-.creator{display:flex;align-items:center;gap:8px;margin-bottom:10px}.avatar{width:30px;height:30px;border-radius:50%;background:#e9f1d9;display:grid;place-items:center;font-weight:900}
-input,textarea,select{width:100%;padding:11px 12px;border:1px solid #dfe3d8;border-radius:11px;font:inherit;margin:6px 0 12px;background:#fff}
-textarea{min-height:85px;resize:vertical}.hidden{display:none!important}.community{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
-.overlay{position:fixed;inset:0;background:#11182799;display:grid;place-items:center;z-index:10;padding:15px}.modal{background:#fff;border-radius:20px;padding:22px;width:min(480px,100%);max-height:90vh;overflow:auto}
-@media(max-width:850px){.shell{grid-template-columns:1fr;max-width:650px;margin:16px auto}.left,.right{display:none}header{padding:0 16px}.tipvisual{height:250px}}
-</style></head>
+:root{--dark:#17231c;--green:#c7f36b;--bg:#f4f6f0;--muted:#68736b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--dark);font:15px system-ui,Arial}
+header{background:white;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:2}
+.logo{font-size:27px;font-weight:900;letter-spacing:-1px}.logo span{color:#79a92e}
+button{border:0;border-radius:10px;padding:11px 15px;background:var(--dark);color:white;font-weight:700;cursor:pointer}
+button.green{background:var(--green);color:var(--dark)}
+button.light{background:#edf1e7;color:var(--dark)}
+input,textarea,select{width:100%;padding:12px;margin:6px 0 13px;border:1px solid #d9dfd5;border-radius:10px;font:inherit;background:white}
+textarea{min-height:85px}
+main{max-width:760px;margin:22px auto;padding:0 14px}
+.panel,.tip{background:white;border:1px solid #e2e6de;border-radius:17px;padding:18px;margin-bottom:16px}
+h2{margin:0 0 12px;font-size:20px}
+.muted{color:var(--muted);font-size:13px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tip h3{font-size:19px;margin:8px 0}
+.category{font-size:12px;color:#547a2a;font-weight:800}
+video{width:100%;max-height:430px;background:#111;border-radius:12px;margin-top:10px}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.actions button{font-size:12px;padding:9px 11px}
+.comment{background:#f5f7f2;padding:9px 12px;border-radius:10px;margin:7px 0;font-size:13px}
+.hidden{display:none}
+.status{padding:10px;border-radius:9px;background:#eff5e5;margin:10px 0;font-size:13px}
+footer{text-align:center;padding:25px;color:#788078;font-size:12px}
+@media(min-width:700px){main{margin-top:30px}}
+</style>
+</head>
 <body>
-<header><div class="logo">TIP<span>TOPS</span><span class="tag">TODOS SABEMOS ALGO. COMPARTILO.</span></div><button class="lime" onclick="openCreate()">＋ Compartir un TIP</button></header>
-<div class="shell">
-<aside class="left">
- <div class="panel"><h3>Tu espacio</h3><div class="navitem active" onclick="showFeed()">🏠 Para aprender</div><div class="navitem" onclick="showCommunities()">🧩 Comunidades</div><div class="navitem" onclick="showSaved()">🔖 Mis guardados</div><div class="navitem" onclick="openCreate()">＋ Compartir un TIP</div></div>
- <div class="panel"><h3>Explorá por interés</h3><div id="sideCats"></div></div>
-</aside>
-<main><div class="feedhead"><div><h2 id="sectionTitle">Ideas que te pueden servir</h2><div class="muted" id="sectionSub">Aprendé algo nuevo en menos de un minuto.</div></div><button class="secondary" onclick="shuffleTips()">↻ Actualizar</button></div><div id="feed"></div></main>
-<aside class="right">
- <div class="panel"><h3>Comunidades</h3><div id="rightComms"></div><button class="secondary" style="width:100%;margin-top:12px" onclick="showCommunities()">Ver todas</button></div>
- <div class="panel"><h3>La idea TIPTOPS</h3><p class="muted">No hace falta ser experto. Si sabés hacer algo que otra persona todavía no sabe, tenés un TIP para compartir.</p><strong>Pequeños tips. Grandes aprendizajes.</strong></div>
-</aside>
-</div>
-<footer>TIPTOPS · Primera versión de prueba · Los contenidos de ejemplo son demostrativos.</footer>
-<div id="modal" class="overlay hidden"><div class="modal"><div style="display:flex;justify-content:space-between;align-items:center"><h2 id="modalTitle">Compartí lo que sabés</h2><button class="secondary" onclick="closeModal()">✕</button></div><form id="tipForm"><label>¿Cómo se llama tu TIP?</label><input id="newTitle" required maxlength="90" placeholder="Ej.: Cómo ordenar datos en Excel"><label>Comunidad</label><select id="newCat"></select><label>Contá qué vas a enseñar</label><textarea id="newDesc" required placeholder="Explicá brevemente qué aprende la persona..."></textarea><label>Tu nombre o apodo</label><input id="newAuthor" placeholder="Ej.: Mariano"><label>Enlace a un video (opcional)</label><input id="newVideo" type="url" placeholder="https://..."><p class="muted">En esta versión de prueba se publica una ficha del TIP. La subida real de videos llegará en la siguiente etapa.</p><button class="lime" style="width:100%">Publicar TIP de prueba</button></form></div></div>
+<header>
+ <div><div class="logo">TIP<span>TOPS</span></div><div class="muted">TODOS SABEMOS ALGO. COMPARTILO.</div></div>
+ <button class="green" onclick="document.getElementById('crear').scrollIntoView({behavior:'smooth'})">＋ Compartir TIP</button>
+</header>
+
+<main>
+ <section class="panel" id="cuenta">
+  <h2>Tu cuenta TIPTOPS</h2>
+  <p class="muted">Registrate o ingresá para compartir y valorar consejos.</p>
+  <input id="email" type="email" placeholder="Tu correo electrónico">
+  <input id="password" type="password" placeholder="Contraseña (mínimo 6 caracteres)">
+  <div class="row">
+   <button class="green" onclick="registrar()">Crear cuenta</button>
+   <button onclick="ingresar()">Iniciar sesión</button>
+   <button class="light hidden" id="salir" onclick="cerrarSesion()">Salir</button>
+  </div>
+  <div id="estado" class="status">No has iniciado sesión.</div>
+ </section>
+
+ <section class="panel hidden" id="crear">
+  <h2>Compartí lo que sabés</h2>
+  <label>Título del TIP</label>
+  <input id="titulo" maxlength="100" placeholder="Ej.: Cómo ordenar datos en Excel">
+  <label>Comunidad</label>
+  <select id="categoria">
+   <option>Hogar</option><option>Cocina</option><option>Tecnología</option>
+   <option>Excel / Sheets</option><option>Autos</option><option>Manualidades</option>
+   <option>Jardinería</option><option>Mascotas</option><option>Magia</option>
+   <option>Trabajo</option><option>Reparaciones</option>
+  </select>
+  <label>Explicá qué vas a enseñar</label>
+  <textarea id="descripcion" placeholder="Contá brevemente cómo se hace..."></textarea>
+  <label>Video (opcional, máximo 50 MB)</label>
+  <input id="video" type="file" accept="video/mp4,video/webm,video/quicktime">
+  <button class="green" id="publicar" onclick="publicarTip()">Publicar TIP</button>
+  <p class="muted">Podés publicar un consejo escrito o acompañarlo con un video.</p>
+ </section>
+
+ <section>
+  <div class="row" style="justify-content:space-between;margin:22px 2px 12px">
+   <div><h2>Tips de la comunidad</h2><div class="muted">Aprendé algo nuevo y compartí lo que sabés.</div></div>
+   <button class="light" onclick="cargarTips()">↻ Actualizar</button>
+  </div>
+  <div id="feed"><div class="panel">Cargando publicaciones...</div></div>
+ </section>
+</main>
+<footer>TIPTOPS · Todos sabemos algo. Compartilo.</footer>
+
 <script>
-const categories=["Hogar","Cocina","Tecnología","Excel / Sheets","Autos","Manualidades","Jardinería","Mascotas","Magia","Trabajo"];
-let tips=[
-{id:1,title:"Un atajo de Excel que te ahorra tiempo",cat:"Excel / Sheets",author:"Marta · Excel práctico",emoji:"📊",desc:"Usá Ctrl + Shift + L para activar o quitar los filtros de una tabla. Después podés encontrar datos sin recorrer cientos de filas.",use:128,likes:42,saved:false},
-{id:2,title:"Cómo doblar una sábana ajustable",cat:"Hogar",author:"Lucía en casa",emoji:"🛏️",desc:"Juntá las esquinas de a pares, meté una dentro de otra y apoyá la tela sobre una superficie plana antes de plegarla.",use:96,likes:31,saved:false},
-{id:3,title:"Un truco para que el ajo se pele fácil",cat:"Cocina",author:"Cocina simple",emoji:"🧄",desc:"Separá los dientes y presionalos suavemente con el lateral de un cuchillo. La piel se afloja y sale mucho más fácil.",use:84,likes:27,saved:false},
-{id:4,title:"Limpiá las teclas sin dañarlas",cat:"Tecnología",author:"Nico Tecno",emoji:"⌨️",desc:"Apagá y desconectá el teclado. Usá un paño de microfibra apenas humedecido; no rocíes líquidos directamente sobre el equipo.",use:73,likes:19,saved:false},
-{id:5,title:"Un nudo simple para sujetar una planta",cat:"Jardinería",author:"Verde en casa",emoji:"🪴",desc:"Usá una tira de tela suave y hacé un lazo flojo entre el tallo y el tutor. Dejá espacio para que la planta crezca.",use:61,likes:16,saved:false}
-];
-let liked=new Set(),used=new Set(),filter="Todos",mode="feed";
-function renderCats(){document.getElementById("sideCats").innerHTML=categories.map(c=>`<div class="chip ${filter===c?'active':''}" onclick="setFilter('${c}')">${c}</div>`).join("");document.getElementById("newCat").innerHTML=categories.map(c=>`<option>${c}</option>`).join("");document.getElementById("rightComms").innerHTML=categories.slice(0,5).map(c=>`<div class="community"><span>${c}</span><span class="muted">›</span></div>`).join("")}
-function render(){renderCats();let list=tips.filter(t=>mode==="saved"?t.saved:filter==="Todos"||t.cat===filter);document.getElementById("feed").innerHTML=list.length?list.map(t=>`<article class="tip"><div class="tipvisual" style="background:${bg(t.cat)}"><div><span class="emoji">${t.emoji||"💡"}</span><strong>${esc(t.title)}</strong><small>${esc(t.cat)} · TIPTOPS</small></div></div><div class="tipbody"><div class="creator"><div class="avatar">${(t.author||"T").charAt(0).toUpperCase()}</div><strong>${esc(t.author)}</strong><span class="muted">· TIP compartido</span></div><p>${esc(t.desc)}</p><div class="actions"><button class="${used.has(t.id)?'on':''}" onclick="markUsed(${t.id})">✓ ME SIRVIÓ · ${t.use}</button><button class="${liked.has(t.id)?'on':''}" onclick="like(${t.id})">♡ Me gusta · ${t.likes}</button><button class="${t.saved?'on':'secondary'}" onclick="save(${t.id})">🔖 Guardar</button><button class="secondary" onclick="shareTip(${t.id})">↗ Compartir</button></div></div></article>`).join(""):`<div class="panel"><h3>Todavía no guardaste tips</h3><p class="muted">Cuando encuentres uno útil, tocá “Guardar”.</p></div>`}
-function bg(c){return ({"Excel / Sheets":"linear-gradient(135deg,#174c3b,#56a77b)","Hogar":"linear-gradient(135deg,#46506e,#9a9ab8)","Cocina":"linear-gradient(135deg,#88452f,#e49b5b)","Tecnología":"linear-gradient(135deg,#263b68,#638bd0)","Jardinería":"linear-gradient(135deg,#28553c,#a0bc65)"})[c]||"linear-gradient(135deg,#334155,#8193a8)"}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-function setFilter(c){filter=c;mode="feed";document.getElementById("sectionTitle").textContent=c==="Todos"?"Ideas que te pueden servir":`Tips de ${c}`;render()}
-function showFeed(){filter="Todos";mode="feed";document.getElementById("sectionTitle").textContent="Ideas que te pueden servir";document.getElementById("sectionSub").textContent="Aprendé algo nuevo en menos de un minuto.";render()}
-function showSaved(){mode="saved";document.getElementById("sectionTitle").textContent="Mis guardados";render()}
-function showCommunities(){mode="feed";filter="Todos";document.getElementById("sectionTitle").textContent="Explorá comunidades";document.getElementById("sectionSub").textContent="Elegí un interés para descubrir tips.";document.getElementById("feed").innerHTML=`<div class="panel"><h2>¿Qué te interesa aprender?</h2><p class="muted">Entrá en una comunidad y encontrá personas que comparten lo que saben.</p>${categories.map(c=>`<div class="community"><strong>${c}</strong><button class="secondary" onclick="setFilter('${c}')">Ver tips</button></div>`).join("")}</div>`}
-function markUsed(id){if(!used.has(id)){used.add(id);tips.find(t=>t.id===id).use++}render()}
-function like(id){if(liked.has(id)){liked.delete(id);tips.find(t=>t.id===id).likes--}else{liked.add(id);tips.find(t=>t.id===id).likes++}render()}
-function save(id){let t=tips.find(t=>t.id===id);t.saved=!t.saved;render()}
-function shareTip(id){let t=tips.find(t=>t.id===id);let txt=`TIPTOPS: ${t.title} — ${t.desc}`;if(navigator.share)navigator.share({title:t.title,text:txt});else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(()=>alert("Texto del TIP copiado"))}
-function shuffleTips(){tips=[...tips].sort(()=>Math.random()-.5);render()}
-function openCreate(){document.getElementById("modal").classList.remove("hidden")}
-function closeModal(){document.getElementById("modal").classList.add("hidden")}
-document.getElementById("tipForm").addEventListener("submit",e=>{e.preventDefault();tips.unshift({id:Date.now(),title:document.getElementById("newTitle").value,cat:document.getElementById("newCat").value,author:document.getElementById("newAuthor").value||"Nuevo Tipper",emoji:"✨",desc:document.getElementById("newDesc").value,use:0,likes:0,saved:false,video:document.getElementById("newVideo").value});e.target.reset();closeModal();showFeed();document.getElementById("sectionSub").textContent="¡Tu TIP de prueba ya está en el feed de este dispositivo!"});
-render();
-</script></body></html>
+const URL_SUPABASE = "https://cladndfqixbnccssvtwn.supabase.co";
+const CLAVE_PUBLICA = "sb_publishable_lb6YgxGM1UCT_i3tSbj19w_xRzZdOCz";
+const db = window.supabase.createClient(URL_SUPABASE, CLAVE_PUBLICA);
+let usuario = null;
+let publicaciones = [];
+
+function escapar(s){
+ return String(s || "").replace(/[&<>"']/g, c => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[c]);
+}
+function mensaje(s){
+ document.getElementById("estado").textContent=s;
+}
+async function actualizarSesion(){
+ const {data} = await db.auth.getSession();
+ usuario = data.session?.user || null;
+ document.getElementById("crear").classList.toggle("hidden",!usuario);
+ document.getElementById("salir").classList.toggle("hidden",!usuario);
+ mensaje(usuario ? "Sesión iniciada: "+usuario.email : "No has iniciado sesión.");
+}
+async function registrar(){
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+ if(!email || password.length<6){mensaje("Ingresá un correo y una contraseña de al menos 6 caracteres.");return;}
+ const {error}=await db.auth.signUp({email,password});
+ mensaje(error ? error.message : "Registro enviado. Si te pide confirmar el correo, revisá tu bandeja de entrada.");
+ await actualizarSesion();
+}
+async function ingresar(){
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+ const {error}=await db.auth.signInWithPassword({email,password});
+ mensaje(error ? error.message : "¡Bienvenido a TIPTOPS!");
+ await actualizarSesion();
+ await cargarTips();
+}
+async function cerrarSesion(){
+ await db.auth.signOut();
+ await actualizarSesion();
+ await cargarTips();
+}
+async function publicarTip(){
+ if(!usuario){alert("Primero iniciá sesión.");return;}
+ const titulo=document.getElementById("titulo").value.trim();
+ const descripcion=document.getElementById("descripcion").value.trim();
+ const categoria=document.getElementById("categoria").value;
+ const archivo=document.getElementById("video").files[0];
+ if(!titulo || !descripcion){alert("Completá el título y la explicación.");return;}
+ if(archivo && archivo.size>50*1024*1024){alert("El video supera los 50 MB.");return;}
+ const boton=document.getElementById("publicar");
+ boton.disabled=true;boton.textContent="Publicando...";
+ try{
+  let video_path=null;
+  if(archivo){
+   const ext=(archivo.name.split(".").pop() || "mp4").toLowerCase();
+   const nombre=usuario.id+"/"+crypto.randomUUID()+"."+ext;
+   const {error:subida}=await db.storage.from("tip-videos").upload(nombre,archivo,{contentType:archivo.type});
+   if(subida) throw subida;
+   video_path=nombre;
+  }
+  const {error}=await db.from("tips").insert({
+   user_id:usuario.id,title:titulo,description:descripcion,
+   category:categoria,video_path
+  });
+  if(error) throw error;
+  document.getElementById("titulo").value="";
+  document.getElementById("descripcion").value="";
+  document.getElementById("video").value="";
+  alert("¡Tu TIP fue publicado!");
+  await cargarTips();
+ }catch(e){alert("No se pudo publicar: "+e.message);}
+ finally{boton.disabled=false;boton.textContent="Publicar TIP";}
+}
+async function cargarTips(){
+ const feed=document.getElementById("feed");
+ feed.innerHTML='<div class="panel">Cargando publicaciones...</div>';
+ const {data,error}=await db.from("tips").select("*").order("created_at",{ascending:false});
+ if(error){feed.innerHTML='<div class="panel">No se pudieron cargar los tips: '+escapar(error.message)+'</div>';return;}
+ publicaciones=data||[];
+ if(!publicaciones.length){feed.innerHTML='<div class="panel">Todavía no hay publicaciones. ¡Sé el primero en compartir un TIP!</div>';return;}
+ const {data:votos}=await db.from("tip_votes").select("tip_id,user_id,vote_type");
+ const {data:comentarios}=await db.from("tip_comments").select("tip_id");
+ const conteo={};
+ (votos||[]).forEach(v=>{
+  conteo[v.tip_id]=conteo[v.tip_id]||{like:0,useful:0,mios:[]};
+  conteo[v.tip_id][v.vote_type]=(conteo[v.tip_id][v.vote_type]||0)+1;
+  if(usuario && v.user_id===usuario.id) conteo[v.tip_id].mios.push(v.vote_type);
+ });
+ const cantComentarios={};
+ (comentarios||[]).forEach(c=>cantComentarios[c.tip_id]=(cantComentarios[c.tip_id]||0)+1);
+ feed.innerHTML=publicaciones.map(t=>{
+  const v=conteo[t.id]||{like:0,useful:0,mios:[]};
+  const video=t.video_path ? db.storage.from("tip-videos").getPublicUrl(t.video_path).data.publicUrl : "";
+  return `<article class="tip">
+   <div class="category">${escapar(t.category)}</div>
+   <h3>${escapar(t.title)}</h3>
+   <p>${escapar(t.description)}</p>
+   ${video?`<video controls playsinline preload="metadata" src="${escapar(video)}"></video>`:""}
+   <div class="muted">Publicado el ${new Date(t.created_at).toLocaleDateString("es-AR")}</div>
+   <div class="actions">
+    <button class="${v.mios.includes("useful")?"green":"light"}" onclick="votar('${t.id}','useful')">✓ ME SIRVIÓ · ${v.useful||0}</button>
+    <button class="${v.mios.includes("like")?"green":"light"}" onclick="votar('${t.id}','like')">♡ Me gusta · ${v.like||0}</button>
+    <button class="light" onclick="verComentarios('${t.id}')">Comentarios · ${cantComentarios[t.id]||0}</button>
+   </div>
+   <div id="comentarios-${t.id}"></div>
+  </article>`;
+ }).join("");
+}
+async function votar(tipId,tipo){
+ if(!usuario){alert("Iniciá sesión para votar.");return;}
+ const {data,error}=await db.from("tip_votes").select("id").eq("tip_id",tipId).eq("user_id",usuario.id).eq("vote_type",tipo).maybeSingle();
+ if(error){alert(error.message);return;}
+ if(data){
+  const {error:e}=await db.from("tip_votes").delete().eq("id",data.id);
+  if(e){alert(e.message);return;}
+ }else{
+  const {error:e}=await db.from("tip_votes").insert({tip_id:tipId,user_id:usuario.id,vote_type:tipo});
+  if(e){alert(e.message);return;}
+ }
+ await cargarTips();
+}
+async function verComentarios(tipId){
+ const zona=document.getElementById("comentarios-"+tipId);
+ if(!zona)return;
+ const {data,error}=await db.from("tip_comments").select("*").eq("tip_id",tipId).order("created_at",{ascending:true});
+ if(error){zona.textContent="No se pudieron cargar los comentarios.";return;}
+ zona.innerHTML=(data||[]).map(c=>`<div class="comment">${escapar(c.body)}</div>`).join("");
+ zona.innerHTML+=`<textarea id="comentario-${tipId}" placeholder="Escribí un comentario..."></textarea>
+ <button class="light" onclick="comentar('${tipId}')">Enviar comentario</button>`;
+}
+async function comentar(tipId){
+ if(!usuario){alert("Iniciá sesión para comentar.");return;}
+ const campo=document.getElementById("comentario-"+tipId);
+ const body=campo.value.trim();
+ if(!body)return;
+ const {error}=await db.from("tip_comments").insert({tip_id:tipId,user_id:usuario.id,body});
+ if(error){alert(error.message);return;}
+ await verComentarios(tipId);
+}
+db.auth.onAuthStateChange(async()=>{
+ await actualizarSesion();
+});
+actualizarSesion();
+cargarTips();
+</script>
+</body>
+</html>
