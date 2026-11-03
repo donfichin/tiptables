@@ -101,6 +101,7 @@ function mensaje(s){
 async function actualizarSesion(){
  const {data} = await db.auth.getSession();
  usuario = data.session?.user || null;
+ document.getElementById("cuenta").classList.toggle("hidden",!!usuario)
  document.getElementById("crear").classList.toggle("hidden",!usuario);
  document.getElementById("salir").classList.toggle("hidden",!usuario);
  mensaje(usuario ? "Sesión iniciada: "+usuario.email : "No has iniciado sesión.");
