@@ -20,6 +20,15 @@
 </header>
 
 <main>
+ <section class="panel hidden" id="perfil">
+ <div class="row" style="justify-content:space-between;align-items:center">
+  <h2>Mi perfil</h2>
+  <button class="light" onclick="document.getElementById('perfil').classList.add('hidden')">Cerrar</button>
+ </div>
+ <p id="perfil-email" class="muted"></p>
+ <h3>Mis TIP publicados</h3>
+ <div id="mis-tips" class="muted">Cargando tus publicaciones...</div>
+ </section>
  <section class="panel" id="cuenta">
   <h2>Tu cuenta TIPTOPS</h2>
   <p class="muted">Registrate o ingresá para compartir y valorar consejos.</p>
