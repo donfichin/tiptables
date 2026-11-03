@@ -146,7 +146,6 @@ async function mostrarPerfil(){
   '<div class="comment"><strong>'+escapar(t.title)+'</strong><div class="muted">'+escapar(t.category)+' · '+new Date(t.created_at).toLocaleDateString("es-AR")+'</div></div>'
  ).join("");
 }
-}
 async function registrar(){
  const email=document.getElementById("email").value.trim();
  const password=document.getElementById("password").value;
