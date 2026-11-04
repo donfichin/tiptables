@@ -305,7 +305,8 @@ async function publicarTip(){
  const titulo=document.getElementById("titulo").value.trim();
  const descripcion=document.getElementById("descripcion").value.trim();
  const categoria=document.getElementById("categoria").value;
- const archivo=document.getElementById("video").files[0];
+ archivoVideo=null;
+document.getElementById("videoElegido").textContent="Todavía no seleccionaste un video.";
  if(!titulo || !descripcion){alert("Completá el título y la explicación.");return;}
  if(!archivo){alert("Para publicar un TIP tenés que adjuntar un video.");return;}
  if(archivo && archivo.size>50*1024*1024){alert("El video supera los 50 MB.");return;}
