@@ -207,6 +207,11 @@ async function cargarTips(){
  if(error){feed.innerHTML='<div class="panel">No se pudieron cargar los tips: '+escapar(error.message)+'</div>';return;}
  publicaciones=data||[];
  if(!publicaciones.length){feed.innerHTML='<div class="panel">Todavía no hay publicaciones. ¡Sé el primero en compartir un TIP!</div>';return;}
+  const ids=[...new Set(publicaciones.map(t=>t.user_id).filter(Boolean))];
+ const {data:perfiles}=await db.from("profiles")
+  .select("user_id,username,display_name").in("user_id",ids);
+ const autores={};
+ (perfiles||[]).forEach(p=>autores[p.user_id]=p);
  const {data:votos}=await db.from("tip_votes").select("tip_id,user_id,vote_type");
  const {data:comentarios}=await db.from("tip_comments").select("tip_id");
  const conteo={};
