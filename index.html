@@ -242,6 +242,14 @@ async function ingresar(){
  await actualizarSesion();
  await cargarTips();
 }
+function toggleCrear(){
+ if(!usuario){
+  document.getElementById("cuenta").scrollIntoView({behavior:"smooth"});
+  return;
+ }
+ document.getElementById("crear").classList.toggle("hidden");
+ document.getElementById("crear").scrollIntoView({behavior:"smooth"});
+} 
 async function cerrarSesion(){
  await db.auth.signOut();
  await actualizarSesion();
