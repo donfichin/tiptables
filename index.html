@@ -302,39 +302,70 @@ async function cerrarSesion(){
  await cargarTips();
 }
 async function publicarTip(){
- if(!usuario){alert("Primero iniciá sesión.");return;}
+ if(!usuario){
+  alert("Primero iniciá sesión.");
+  return;
+ }
+
  const titulo=document.getElementById("titulo").value.trim();
  const descripcion=document.getElementById("descripcion").value.trim();
  const categoria=document.getElementById("categoria").value;
- archivoVideo=null;
-document.getElementById("videoElegido").textContent="Todavía no seleccionaste un video.";
- if(!titulo || !descripcion){alert("Completá el título y la explicación.");return;}
- if(!archivo){alert("Para publicar un TIP tenés que adjuntar un video.");return;}
- if(archivo && archivo.size>50*1024*1024){alert("El video supera los 50 MB.");return;}
+
+ if(!titulo || !descripcion){
+  alert("Completá el título y la explicación.");
+  return;
+ }
+
+ if(!archivoVideo){
+  alert("Ahora elegí cómo agregar tu video: grabalo o seleccioná uno de tu galería.");
+  document.getElementById("videoCamara").scrollIntoView({behavior:"smooth",block:"center"});
+  return;
+ }
+
+ if(archivoVideo.size>50*1024*1024){
+  alert("El video supera los 50 MB.");
+  return;
+ }
+
  const boton=document.getElementById("publicar");
- boton.disabled=true;boton.textContent="Publicando...";
+ boton.disabled=true;
+ boton.textContent="Publicando...";
+
  try{
-  let video_path=null;
-  if(archivo){
-   const ext=(archivo.name.split(".").pop() || "mp4").toLowerCase();
-   const nombre=usuario.id+"/"+crypto.randomUUID()+"."+ext;
-   const {error:subida}=await db.storage.from("tip-videos").upload(nombre,archivo,{contentType:archivo.type});
-   if(subida) throw subida;
-   video_path=nombre;
-  }
+  const ext=(archivoVideo.name.split(".").pop() || "mp4").toLowerCase();
+  const nombre=usuario.id+"/"+crypto.randomUUID()+"."+ext;
+
+  const {error:subida}=await db.storage.from("tip-videos").upload(
+   nombre,archivoVideo,{contentType:archivoVideo.type}
+  );
+  if(subida) throw subida;
+
   const {error}=await db.from("tips").insert({
-   user_id:usuario.id,title:titulo,description:descripcion,
-   category:categoria,video_path
+   user_id:usuario.id,
+   title:titulo,
+   description:descripcion,
+   category:categoria,
+   video_path:nombre
   });
   if(error) throw error;
+
   document.getElementById("titulo").value="";
   document.getElementById("descripcion").value="";
-  document.getElementById("video").value="";
+  document.getElementById("videoCamara").value="";
+  document.getElementById("videoGaleria").value="";
+  archivoVideo=null;
+  document.getElementById("videoElegido").textContent="Todavía no seleccionaste un video.";
+
   alert("¡Tu TIP fue publicado!");
+  document.getElementById("crear").classList.add("hidden");
   await cargarTips();
- }catch(e){alert("No se pudo publicar: "+e.message);}
- finally{boton.disabled=false;boton.textContent="Publicar TIP";}
-}
+
+ }catch(e){
+  alert("No se pudo publicar: "+e.message);
+ }finally{
+  boton.disabled=false;
+  boton.textContent="Publicar TIP";
+ }
 async function cargarTips(){
  const feed=document.getElementById("feed");
  feed.innerHTML='<div class="panel">Cargando publicaciones...</div>';
