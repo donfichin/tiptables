@@ -171,8 +171,14 @@ main > section > .row{
   </select>
   <label>Explicá qué vas a enseñar</label>
   <textarea id="descripcion" placeholder="Contá brevemente cómo se hace..."></textarea>
-  <label>Video (opcional, máximo 50 MB)</label>
-  <input id="video" type="file" accept="video/mp4,video/webm,video/quicktime">
+  <label>Tu video (máximo 50 MB)</label>
+<div class="row">
+  <button type="button" class="green" onclick="document.getElementById('videoCamara').click()">🎥 Grabar video</button>
+  <button type="button" class="light" onclick="document.getElementById('videoGaleria').click()">🖼 Elegir de galería</button>
+</div>
+<input id="videoCamara" type="file" accept="video/*" capture="environment" hidden onchange="seleccionarVideo(this)">
+<input id="videoGaleria" type="file" accept="video/*" hidden onchange="seleccionarVideo(this)">
+<p id="videoElegido" class="muted">Todavía no seleccionaste un video.</p>
   <button class="green" id="publicar" onclick="publicarTip()">Publicar TIP</button>
   <p class="muted">Podés publicar un consejo escrito o acompañarlo con un video.</p>
  </section>
