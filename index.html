@@ -199,7 +199,22 @@ const CLAVE_PUBLICA = "sb_publishable_lb6YgxGM1UCT_i3tSbj19w_xRzZdOCz";
 const db = window.supabase.createClient(URL_SUPABASE, CLAVE_PUBLICA);
 let usuario = null;
 let publicaciones = [];
+let archivoVideo = null;
 
+function seleccionarVideo(campo){
+ const archivo=campo.files[0];
+ if(!archivo)return;
+ if(archivo.size>50*1024*1024){
+  alert("El video supera los 50 MB.");
+  campo.value="";
+  return;
+ }
+ archivoVideo=archivo;
+ document.getElementById("videoCamara").value="";
+ document.getElementById("videoGaleria").value="";
+ campo.files && (archivoVideo=archivo);
+ document.getElementById("videoElegido").textContent="Video seleccionado: "+archivo.name;
+}
 function escapar(s){
  return String(s || "").replace(/[&<>"']/g, c => ({
   "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
