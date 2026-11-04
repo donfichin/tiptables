@@ -207,7 +207,7 @@ async function cargarTips(){
  if(error){feed.innerHTML='<div class="panel">No se pudieron cargar los tips: '+escapar(error.message)+'</div>';return;}
  publicaciones=data||[];
  if(!publicaciones.length){feed.innerHTML='<div class="panel">Todavía no hay publicaciones. ¡Sé el primero en compartir un TIP!</div>';return;}
-  const ids=[...new Set(publicaciones.map(t=>t.user_id).filter(Boolean))];
+ const ids=[...new Set(publicaciones.map(t=>t.user_id).filter(Boolean))];
  const {data:perfiles}=await db.from("profiles")
   .select("user_id,username,display_name").in("user_id",ids);
  const autores={};
@@ -227,6 +227,11 @@ async function cargarTips(){
   const video=t.video_path ? db.storage.from("tip-videos").getPublicUrl(t.video_path).data.publicUrl : "";
   return `<article class="tip">
    <div class="category">${escapar(t.category)}</div>
+      <div class="muted">
+    <button class="light" onclick="verPerfilPublico('${t.user_id}')">
+     ${escapar(autores[t.user_id]?.display_name||"Miembro de TIPTOPS")} · Ver perfil
+    </button>
+   </div>
    <h3>${escapar(t.title)}</h3>
    <p>${escapar(t.description)}</p>
    ${video?`<video controls playsinline preload="metadata" src="${escapar(video)}"></video>`:""}
