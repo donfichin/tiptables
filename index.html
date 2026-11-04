@@ -207,7 +207,7 @@ async function actualizarSesion(){
  usuario = data.session?.user || null;
 
  document.getElementById("cuenta").classList.toggle("hidden",!!usuario);
- document.getElementById("crear").classList.toggle("hidden",!usuario);
+ document.getElementById("crear").classList.add("hidden");
  document.getElementById("salir").classList.toggle("hidden",!usuario);
 
  document.getElementById("usuario-header").textContent = usuario ? usuario.email : "";
