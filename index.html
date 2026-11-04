@@ -113,6 +113,17 @@ footer{display:none}
  header{max-width:520px;margin:auto}
  main{box-shadow:0 0 40px #000}
 }
+/* El feed comienza directamente con el video */
+main > section > .row{
+ display:none !important;
+}
+#feed{
+ margin:0;
+ padding:0;
+}
+#feed .tip{
+ scroll-snap-align:start;
+} 
 </style>
 </head>
 <body>
