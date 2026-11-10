@@ -182,11 +182,13 @@ header button.green{background:#ffd45e;color:#173b4a;border-radius:24px;padding:
  <section class="panel" id="cuenta">
   <h2>Tu cuenta TIPTOPS</h2>
   <p class="muted">Registrate o ingresá para compartir y valorar consejos.</p>
-  <input id="email" type="email" placeholder="Tu correo electrónico">
-  <input id="password" type="password" placeholder="Contraseña (mínimo 6 caracteres)">
+  <label for="email">Correo electrónico</label>
+  <input id="email" type="email" autocomplete="email" placeholder="Tu correo electrónico">
+  <label for="password">Contraseña</label>
+  <input id="password" type="password" autocomplete="current-password" placeholder="Contraseña (mínimo 6 caracteres)">
   <div class="row">
-   <button class="green" onclick="registrar()">Crear cuenta</button>
-   <button onclick="ingresar()">Iniciar sesión</button>
+   <button class="green" onclick="ingresar()">Entrar a TIPTOPS</button>
+   <button onclick="registrar()">Crear cuenta</button>
    <button class="light hidden" id="salir" onclick="cerrarSesion()">Salir</button>
   </div>
   <div id="estado" class="status">No has iniciado sesión.</div>
@@ -475,6 +477,12 @@ db.auth.onAuthStateChange(async()=>{
 });
 actualizarSesion();
 cargarTips();
+["email","password"].forEach(id=>{
+ const campo=document.getElementById(id);
+ campo.addEventListener("keydown",e=>{
+  if(e.key==="Enter"){e.preventDefault();ingresar();}
+ });
+});
 </script>
 </body>
 </html>
