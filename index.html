@@ -113,10 +113,6 @@ footer{display:none}
  header{max-width:520px;margin:auto}
  main{box-shadow:0 0 40px #000}
 }
-/* El feed comienza directamente con el video */
-main > section > .row{
- display:none !important;
-}
 #feed{
  margin:0;
  padding:0;
@@ -137,7 +133,44 @@ main > section > .row{
   object-fit: contain;
   background: #dfe4df;
 }
- 
+
+/* Identidad visual TIPTOPS: optimista, cálida y educativa */
+:root{--dark:#183b4a;--green:#c7f36b;--bg:#f3fbfa;--muted:#59717a}
+body{background:#f3fbfa;color:#183b4a}
+header{background:linear-gradient(110deg,#173b4a,#236878);color:#fff;border:0;box-shadow:0 4px 20px #183b4a22}
+.logo{color:#fff}.logo span{color:#ffd45e}
+header .muted{color:#c8eeeb}
+header button.green{background:#ffd45e;color:#173b4a;border-radius:24px;padding:12px 17px;box-shadow:0 4px 0 #d5a83b}
+#cuenta{background:linear-gradient(135deg,#fff 0%,#e8fbf7 100%);color:#183b4a;border:2px solid #48d6c8;border-radius:22px;box-shadow:0 12px 30px #1a7e7418}
+#cuenta h2{color:#183b4a;font-size:23px}
+#cuenta .muted{color:#58747b}
+#cuenta label{display:block;font-weight:700;margin-top:8px}
+#cuenta input{background:#fff;color:#183b4a;border:2px solid #cce8e4;border-radius:13px}
+#cuenta .row{display:flex!important;gap:10px;flex-wrap:wrap}
+#cuenta .row button{flex:1;min-width:125px;border-radius:24px;padding:13px 15px;background:#9277ed;color:#fff}
+#cuenta .row button.green{background:#ff786b;color:#fff;box-shadow:0 4px 0 #d65b51}
+#cuenta .row button.light{background:#48d6c8;color:#123f49}
+#cuenta .status{background:#fff3d2;color:#624b13;border-radius:12px}
+#crear{background:#fff;color:#183b4a;border:2px solid #48d6c8;border-radius:22px}
+#crear input,#crear textarea,#crear select{background:#f7fffd;color:#183b4a;border:1px solid #b9dfda}
+#crear button.green{background:#ff786b;color:#fff}
+#crear button.light{background:#48d6c8;color:#123f49}
+#feed{background:#e9f8f5}
+#feed>.panel{margin:16px;padding:28px 20px;border:0;border-radius:22px;background:linear-gradient(135deg,#fff0d1,#ffe1dd 55%,#e8e0ff);color:#183b4a;text-align:center;box-shadow:0 12px 28px #183b4a16}
+#feed>.panel h2{font-size:24px}
+.tip{background:#183b4a}
+.tip .category{color:#ffd45e}
+.tip video{background:#d9f1ed}
+.tip .actions button{border-radius:22px}
+.tip .actions button.green{background:#ffd45e;color:#183b4a}
+#feed .tip{background:#183b4a}
+@media(max-width:600px){
+ header{padding:12px}
+ main{padding:0}
+ #cuenta{margin:12px;border-radius:20px}
+ #cuenta .row button{flex:1}
+ #feed>.panel{margin:14px}
+}
 </style>
 </head>
 <body>
@@ -232,12 +265,6 @@ async function actualizarSesion(){
  document.getElementById("crear").classList.add("hidden");
  document.getElementById("salir").classList.toggle("hidden",!usuario);
 
- document.getElementById("usuario-header").textContent = usuario ? usuario.email : "";
- document.getElementById("usuario-header").classList.toggle("hidden",!usuario);
- document.getElementById("mi-perfil").classList.toggle("hidden",!usuario);
- document.getElementById("salir-header").classList.toggle("hidden",!usuario);
-
- if(!usuario) document.getElementById("perfil").classList.add("hidden");
 
  mensaje(usuario ? "Sesión iniciada: "+usuario.email : "No has iniciado sesión.");
 }
@@ -366,6 +393,7 @@ async function publicarTip(){
   boton.disabled=false;
   boton.textContent="Publicar TIP";
  }
+}
 async function cargarTips(){
  const feed=document.getElementById("feed");
  feed.innerHTML='<div class="panel">Cargando publicaciones...</div>';
