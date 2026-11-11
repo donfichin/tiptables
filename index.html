@@ -547,7 +547,7 @@ async function cargarTips(){
    <div class="actions">
     <button class="${v.mios.includes("useful")?"green":"light"}" onclick="votar('${t.id}','useful')">✓ ME SIRVIÓ · ${v.useful||0}</button>
     <button class="${v.mios.includes("like")?"green":"light"}" onclick="votar('${t.id}','like')">♡ Me gusta · ${v.like||0}</button>
-    <button class="light" onclick="verComentarios('${t.id}')">Comentarios · ${cantComentarios[t.id]||0}</button>
+    <button class="light" onclick="toggleComentarios('${t.id}')">Comentarios · ${cantComentarios[t.id]||0}</button>
    </div>
    <div id="comentarios-${t.id}"></div>
   </article>`;
@@ -566,10 +566,15 @@ async function votar(tipId,tipo){
  }
  await cargarTips();
 }
-async function verComentarios(tipId){
+function toggleComentarios(tipId){
  const zona=document.getElementById("comentarios-"+tipId);
  if(!zona)return;
  if(zona.classList.contains("open")){zona.classList.remove("open");return;}
+ verComentarios(tipId);
+}
+async function verComentarios(tipId){
+ const zona=document.getElementById("comentarios-"+tipId);
+ if(!zona)return;
  zona.classList.add("open");
  zona.innerHTML='<div class="comment-empty">Cargando comentarios...</div>';
  const {data,error}=await db.from("tip_comments").select("*").eq("tip_id",tipId).order("created_at",{ascending:true});
