@@ -262,6 +262,87 @@ button:active{transform:scale(.97)}
  #feed .tip .actions button{font-size:10px;padding:8px 9px}
 }
 
+
+/* TIPTOPS immersive video experience */
+html,body{height:100%;overflow:hidden;background:#090f14;color:#fff}
+body{margin:0;font-family:Inter,system-ui,sans-serif}
+header{display:none!important}
+main{width:100%;max-width:none;height:100dvh;margin:0;padding:0;overflow:hidden;background:#090f14}
+main>section:first-of-type{display:none!important}
+main>section:nth-of-type(2){display:none!important}
+main>section:nth-of-type(3){display:none!important}
+main>section:last-of-type{height:100%;margin:0;padding:0}
+main>section:last-of-type>.row{display:none!important}
+#feed{height:100dvh;width:100%;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;scroll-behavior:smooth;overscroll-behavior-y:contain;background:#090f14}
+#feed .tip{height:100dvh;min-height:100dvh;width:100%;margin:0;padding:0 0 76px;box-sizing:border-box;border:0;border-radius:0;overflow:hidden;position:relative;display:flex;flex-direction:column;justify-content:flex-end;scroll-snap-align:start;scroll-snap-stop:always;background:#090f14;color:white}
+#feed .tip:after{content:"";position:absolute;inset:35% 0 76px;background:linear-gradient(transparent,rgba(0,0,0,.78));z-index:1;pointer-events:none;display:block}
+#feed .tip video{position:absolute;inset:0;width:100%;height:calc(100% - 76px);max-height:none;aspect-ratio:auto;object-fit:contain;background:#090f14;border:0;border-radius:0;margin:0;z-index:0}
+#feed .tip>*{position:relative;z-index:2}
+#feed .tip .category{color:#9de7d5;font-size:12px;margin:0 88px 8px 16px;text-transform:uppercase;letter-spacing:.08em}
+#feed .tip h3{color:#fff;font-size:21px;line-height:1.2;margin:0 88px 7px 16px;text-shadow:0 1px 4px #000}
+#feed .tip p{color:#fff;font-size:14px;line-height:1.35;margin:0 88px 8px 16px;text-shadow:0 1px 4px #000;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+#feed .tip .muted{color:#e1e8eb;font-size:10px;margin:3px 88px 8px 16px}
+#feed .tip .muted button{background:#ffffff25;color:#fff;border:1px solid #ffffff50}
+#feed .tip .actions{position:absolute;right:10px;bottom:calc(100px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:14px;margin:0;padding:0;z-index:5}
+#feed .tip .actions button{width:58px;min-height:48px;flex:none;padding:6px 3px;border-radius:14px;background:#15232dcc;color:#fff;border:1px solid #ffffff35;font-size:9px;line-height:1.2;white-space:normal;backdrop-filter:blur(8px)}
+#feed .tip .actions button.green{background:#b8f0dc;color:#123c37}
+#feed .tip [id^="comentarios-"]{display:none!important}
+#feed .tip [id^="comentarios-"].open{display:block!important;position:fixed;z-index:80;left:0;right:0;bottom:calc(62px + env(safe-area-inset-bottom));max-height:65dvh;overflow-y:auto;padding:16px;background:#f7fafb;color:#172b34;border-radius:20px 20px 0 0;box-shadow:0 -12px 40px #0006}
+#feed .tip [id^="comentarios-"] .comment{background:white;color:#172b34;border:1px solid #dce5e8;border-radius:12px;padding:11px;margin:7px 0;overflow-wrap:anywhere}
+#feed .tip [id^="comentarios-"] textarea{width:100%;min-height:54px;box-sizing:border-box;background:white;color:#172b34;border:1px solid #cbd8de;border-radius:12px;padding:11px}
+#feed .tip [id^="comentarios-"] button{width:100%;background:#173f49;color:white;border-radius:24px;padding:12px}
+#feed .tip [id^="comentarios-"] .comment-empty{color:#52656d}
+#feed .tip .actions button:last-child{font-size:9px}
+#feed .tip .actions button:first-child{font-size:9px}
+#feed .tip .actions button:nth-child(2){font-size:9px}
+#tipTopTabs{position:fixed;top:env(safe-area-inset-top,0);left:0;right:0;height:42px;display:flex;justify-content:center;align-items:center;gap:24px;z-index:30;pointer-events:none;background:linear-gradient(#0006,transparent)}
+#tipTopTabs button{pointer-events:auto;background:transparent;color:#ffffffa8;padding:8px 4px;border-radius:0;font-weight:700;font-size:14px}
+#tipTopTabs button.active{color:white;border-bottom:2px solid #b8f0dc}
+#tipBottomNav{position:fixed;left:0;right:0;bottom:0;height:62px;padding:4px 10px calc(4px + env(safe-area-inset-bottom));display:flex;justify-content:space-around;align-items:center;z-index:50;background:#101b22f2;border-top:1px solid #ffffff20;backdrop-filter:blur(14px)}
+#tipBottomNav button{min-width:54px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;background:transparent;color:#dce6e9;font-size:10px;border-radius:12px}
+#tipBottomNav button b{font-size:21px;line-height:1}
+#tipBottomNav button.active{color:#b8f0dc}
+#tipBottomNav #navCrear{width:48px;height:42px;min-width:48px;border-radius:13px;background:#b8f0dc;color:#123c37;font-size:25px;padding:0}
+#tipBottomNav #navCrear b{font-size:27px}
+#tipCuentaOverlay{display:none;position:fixed;inset:0;z-index:100;background:#071116df;align-items:center;justify-content:center;padding:20px}
+#tipCuentaOverlay.open{display:flex}
+#tipCuentaOverlay #cuenta{display:block!important;width:min(100%,390px);margin:0;background:#f8fbfc;color:#172b34;border-radius:20px;padding:22px}
+#tipCuentaOverlay #cuenta h2{color:#173f49}
+#tipCuentaOverlay #cuenta .muted{color:#536a73}
+#tipCuentaOverlay #cuenta input{background:white;color:#172b34}
+#tipCuentaOverlay #cuenta .row button.green{background:#173f49;color:white}
+#tipCuentaOverlay #cuenta .status{background:#e3f4ef;color:#173f49}
+#tipCuentaOverlay #cuenta label{display:block;color:#253e48}
+#tipCrearOverlay{display:none;position:fixed;inset:0;z-index:100;background:#071116df;align-items:flex-end;justify-content:center;padding:10px}
+#tipCrearOverlay.open{display:flex}
+#tipCrearOverlay #crear{display:block!important;width:min(100%,560px);max-height:88dvh;overflow-y:auto;margin:0;background:#f8fbfc;color:#172b34;border-radius:22px;padding:20px}
+#tipCrearOverlay #crear h2{color:#173f49}
+#tipCrearOverlay #crear label{display:block}
+#tipCrearOverlay #crear input,#tipCrearOverlay #crear textarea,#tipCrearOverlay #crear select{background:white;color:#172b34}
+#tipCrearOverlay #crear .muted{color:#52656d}
+#tipCrearOverlay #crear button.green{background:#173f49;color:white}
+#tipToast{position:fixed;left:50%;bottom:85px;transform:translateX(-50%);z-index:150;background:#f4fbfa;color:#173f49;padding:10px 16px;border-radius:22px;font-size:13px;box-shadow:0 5px 20px #0005;display:none;white-space:nowrap}
+#tipSearch{display:none;position:fixed;inset:0;z-index:90;background:#f7fafb;color:#172b34;padding:18px;overflow:auto}
+#tipSearch.open{display:block}
+#tipSearch input{margin-top:50px;background:white;color:#172b34}
+#tipSearch button{background:#173f49;color:white;border-radius:20px}
+#tipSearchResults button{display:block;width:100%;text-align:left;margin:8px 0;background:white;color:#172b34;border:1px solid #dce5e8}
+@media(min-width:700px){
+ #feed{width:min(100%,calc(100vw - 190px));margin-left:190px}
+ #feed .tip{width:100%}
+ #feed .tip video{height:calc(100% - 76px)}
+ #tipBottomNav{top:0;bottom:0;left:0;right:auto;width:180px;height:100dvh;flex-direction:column;justify-content:center;gap:22px;border-top:0;border-right:1px solid #ffffff20}
+ #tipBottomNav button{width:140px;flex-direction:row;justify-content:flex-start;gap:14px;padding:12px 18px;font-size:14px}
+ #tipBottomNav #navCrear{width:140px;height:48px}
+ #tipTopTabs{left:190px}
+ #tipCrearOverlay{align-items:center}
+}
+@media(max-width:380px){
+ #feed .tip .actions{right:6px;gap:9px}
+ #feed .tip .actions button{width:50px;min-height:44px;font-size:8px}
+ #feed .tip h3{font-size:18px}
+}
+
 </style>
 </head>
 <body>
@@ -270,6 +351,8 @@ button:active{transform:scale(.97)}
 <button class="green" onclick="toggleCrear()">＋ Publicar TIP</button>
 </header>
 <main>
+ <div id="tipCuentaOverlay"><section id="cuentaMount"></section></div>
+ <div id="tipCrearOverlay"><section id="crearMount"></section></div>
  <section class="panel hidden" id="sesionActiva"><div class="session-pill">● SESIÓN ACTIVA</div><strong id="sesionEmail"></strong><p>Ya estás dentro de TIPTOPS. ¡A descubrir y compartir consejos!</p><button class="light" onclick="cerrarSesion()">Cerrar sesión</button></section>
  <section class="panel" id="cuenta">
   <h2>Tu cuenta TIPTOPS</h2>
@@ -319,6 +402,17 @@ button:active{transform:scale(.97)}
   <div id="feed"><div class="panel">Cargando publicaciones...</div></div>
  </section>
 </main>
+
+<div id="tipTopTabs"><button class="active" onclick="tipToast('Estás viendo los consejos de la comunidad')">Para vos</button><button onclick="tipToast('La sección Siguiendo estará disponible próximamente')">Siguiendo</button></div>
+<nav id="tipBottomNav">
+ <button class="active" onclick="tipGoHome()"><b>⌂</b>Inicio</button>
+ <button onclick="tipOpenSearch()"><b>⌕</b>Buscar</button>
+ <button id="navCrear" onclick="tipOpenCreate()"><b>＋</b></button>
+ <button onclick="tipToast('Tu actividad estará disponible próximamente')"><b>♡</b>Actividad</button>
+ <button onclick="tipOpenAccount()"><b>♙</b>Perfil</button>
+</nav>
+<div id="tipSearch"><button onclick="tipCloseSearch()">← Volver</button><h2>Buscar consejos</h2><input id="tipSearchInput" placeholder="Buscar por tema, título o categoría" oninput="tipFilterSearch()"><div id="tipSearchResults"></div></div>
+<div id="tipToast"></div>
 <footer>TIPTOPS · Todos sabemos algo. Compartilo.</footer>
 
 <script>
@@ -428,14 +522,40 @@ async function ingresar(){
  }catch(e){mensaje("No se pudo iniciar sesión: "+e.message);}
  finally{boton.disabled=false;boton.textContent="Entrar a TIPTOPS";}
 }
-function toggleCrear(){
- if(!usuario){
-  document.getElementById("cuenta").scrollIntoView({behavior:"smooth"});
-  return;
- }
- document.getElementById("crear").classList.toggle("hidden");
- document.getElementById("crear").scrollIntoView({behavior:"smooth"});
-} 
+function toggleCrear(){tipOpenCreate();}
+function tipToast(msg){
+ const el=document.getElementById("tipToast");el.textContent=msg;el.style.display="block";
+ clearTimeout(window.tipToastTimer);window.tipToastTimer=setTimeout(()=>el.style.display="none",2200);
+}
+function tipOpenAccount(){
+ if(usuario){tipToast("Sesión iniciada: "+(usuario.email||"TIPTOPS"));return;}
+ const ov=document.getElementById("tipCuentaOverlay");ov.classList.add("open");
+ const cuenta=document.getElementById("cuenta");document.getElementById("cuentaMount").appendChild(cuenta);
+}
+function tipOpenCreate(){
+ if(!usuario){tipOpenAccount();tipToast("Ingresá para compartir tu video");return;}
+ const ov=document.getElementById("tipCrearOverlay");ov.classList.add("open");
+ const crear=document.getElementById("crear");document.getElementById("crearMount").appendChild(crear);
+}
+function tipCloseCreate(){document.getElementById("tipCrearOverlay").classList.remove("open");}
+function tipGoHome(){document.getElementById("tipSearch").classList.remove("open");document.getElementById("feed").scrollTo({top:0,behavior:"smooth"});}
+function tipOpenSearch(){
+ document.getElementById("tipSearch").classList.add("open");
+ document.getElementById("tipSearchInput").focus();
+ tipFilterSearch();
+}
+function tipCloseSearch(){document.getElementById("tipSearch").classList.remove("open");}
+function tipFilterSearch(){
+ const q=(document.getElementById("tipSearchInput").value||"").toLowerCase();
+ const found=publicaciones.filter(t=>(t.title+" "+t.description+" "+t.category).toLowerCase().includes(q));
+ document.getElementById("tipSearchResults").innerHTML=found.map(t=>'<button onclick="tipJumpTo(\''+t.id+'\')"><strong>'+escapar(t.title)+'</strong><br><small>'+escapar(t.category)+'</small></button>').join("")||'<p>No encontramos consejos con esa búsqueda.</p>';
+}
+function tipJumpTo(id){
+ const cards=[...document.querySelectorAll("#feed .tip")];
+ const i=publicaciones.findIndex(t=>t.id===id);if(i>=0&&cards[i])cards[i].scrollIntoView({behavior:"smooth"});
+ tipCloseSearch();
+}
+
 async function cerrarSesion(){
  const {error}=await db.auth.signOut();
  if(error){mensaje("No se pudo cerrar sesión: "+error.message);return;}
@@ -498,7 +618,7 @@ async function publicarTip(){
   document.getElementById("videoElegido").textContent="Todavía no seleccionaste un video.";
 
   alert("¡Tu TIP fue publicado!");
-  document.getElementById("crear").classList.add("hidden");
+  tipCloseCreate();
   await cargarTips();
 
  }catch(e){
@@ -598,6 +718,7 @@ async function comentar(tipId){
 }
 db.auth.onAuthStateChange((event,session)=>{
  mostrarEstadoSesion(session);
+ if(session?.user){document.getElementById("tipCuentaOverlay").classList.remove("open");}
  if(event==="SIGNED_IN"||event==="SIGNED_OUT") cargarTips();
 });
 actualizarSesion();
