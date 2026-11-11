@@ -664,7 +664,7 @@ async function cargarTips(){
    </div>
    <h3>${escapar(t.title)}</h3>
    <p>${escapar(t.description)}</p>
-   ${video?`<video controls playsinline preload="metadata" src="${escapar(video)}"></video>`:""}
+   ${video?`<video autoplay muted loop playsinline preload="metadata" onclick="this.muted=!this.muted" src="${escapar(video)}"></video>`:""}
    <div class="muted">Publicado el ${new Date(t.created_at).toLocaleDateString("es-AR")}</div>
    <div class="actions">
     <button class="${v.mios.includes("useful")?"green":"light"}" onclick="votar('${t.id}','useful')">✓ ME SIRVIÓ · ${v.useful||0}</button>
