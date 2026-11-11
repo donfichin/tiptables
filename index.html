@@ -351,8 +351,8 @@ main>section:last-of-type>.row{display:none!important}
 <button class="green" onclick="toggleCrear()">＋ Publicar TIP</button>
 </header>
 <main>
- <div id="tipCuentaOverlay"><section id="cuentaMount"></section></div>
- <div id="tipCrearOverlay"><section id="crearMount"></section></div>
+ <div id="tipCuentaOverlay" onclick="if(event.target===this)this.classList.remove('open')"><section id="cuentaMount"></section></div>
+ <div id="tipCrearOverlay" onclick="if(event.target===this)tipCloseCreate()"><section id="crearMount"></section></div>
  <section class="panel hidden" id="sesionActiva"><div class="session-pill">● SESIÓN ACTIVA</div><strong id="sesionEmail"></strong><p>Ya estás dentro de TIPTOPS. ¡A descubrir y compartir consejos!</p><button class="light" onclick="cerrarSesion()">Cerrar sesión</button></section>
  <section class="panel" id="cuenta">
   <h2>Tu cuenta TIPTOPS</h2>
@@ -450,6 +450,8 @@ function mostrarEstadoSesion(session){
  document.getElementById("cuenta").classList.toggle("hidden",!!usuario);
  document.getElementById("sesionActiva").classList.toggle("hidden",!usuario);
  document.getElementById("crear").classList.add("hidden");
+ const acceso=document.getElementById("tipCuentaOverlay");
+ if(acceso) acceso.classList.toggle("open",!usuario);
  if(usuario){
   document.getElementById("sesionEmail").textContent=usuario.email||"Cuenta TIPTOPS";
   document.getElementById("estado").textContent="Sesión iniciada correctamente.";
