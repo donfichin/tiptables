@@ -134,7 +134,39 @@ footer{display:none}
   background: #dfe4df;
 }
 
-/* Identidad visual TIPTOPS: optimista, cálida y educativa */
+/* Nueva identidad TIPTOPS: pop, energía y aprendizaje */
+:root{--dark:#241044;--bg:#fff8fd;--muted:#68577d}
+body{background:#fff8fd;color:#241044}
+header{background:linear-gradient(110deg,#42106e,#9c1de0 58%,#ff477e);color:#fff;box-shadow:0 5px 24px #6713a833}
+.logo{color:#fff}.logo span{color:#ffe44d}
+header .muted{color:#ffe5fa}
+header button.green{background:#ffe44d;color:#32104f;box-shadow:0 4px 0 #d6a928}
+#cuenta{background:linear-gradient(140deg,#fff 0%,#ffe8f5 52%,#eee5ff 100%);border:2px solid #ff4fa0;color:#32104f}
+#cuenta h2{color:#42106e}
+#cuenta .muted{color:#72527f}
+#cuenta input{border:2px solid #e6c5ed;background:#fff;color:#32104f}
+#cuenta .row button{background:#7d35dc;color:#fff}
+#cuenta .row button.green{background:#ff477e;color:#fff;box-shadow:0 4px 0 #c92d68}
+#cuenta .row button.light{background:#27cbb8;color:#142f42}
+#cuenta .status{background:#fff0b8;color:#594000}
+#sesionActiva{margin:12px;background:linear-gradient(120deg,#dcfff5,#e8e0ff 55%,#ffe0ed);color:#32104f;border:2px solid #27cbb8;border-radius:20px}
+#sesionActiva .session-pill{display:inline-block;background:#16a98e;color:white;border-radius:30px;padding:7px 12px;font-weight:900;font-size:12px;margin-bottom:10px}
+#sesionActiva strong{display:block;font-size:18px;overflow-wrap:anywhere}
+#sesionActiva button{background:#7d35dc;color:white;border-radius:22px}
+#crear{background:linear-gradient(145deg,#fff,#fff0f8);color:#32104f;border:2px solid #ff4fa0}
+#crear input,#crear textarea,#crear select{background:#fff;color:#32104f;border-color:#e6c5ed}
+#crear button.green{background:#ff477e;color:#fff}
+#crear button.light{background:#27cbb8;color:#142f42}
+#feed{background:#f6eaff}
+#feed>.panel{background:linear-gradient(135deg,#ffe45e,#ffb2d5 55%,#bfa2ff);color:#32104f}
+.tip,.tip video{background:#241044}
+.tip .category{color:#ffe44d}
+.tip .actions button{background:#552477;color:#fff}
+.tip .actions button.green{background:#ffe44d;color:#32104f}
+#feed .tip{background:#241044}
+button{transition:transform .15s,filter .15s}
+button:active{transform:scale(.97)}
+button:disabled{opacity:.65;cursor:wait}
 :root{--dark:#183b4a;--green:#c7f36b;--bg:#f3fbfa;--muted:#59717a}
 body{background:#f3fbfa;color:#183b4a}
 header{background:linear-gradient(110deg,#173b4a,#236878);color:#fff;border:0;box-shadow:0 4px 20px #183b4a22}
@@ -179,6 +211,7 @@ header button.green{background:#ffd45e;color:#173b4a;border-radius:24px;padding:
 <button class="green" onclick="toggleCrear()">＋ Publicar TIP</button>
 </header>
 <main>
+ <section class="panel hidden" id="sesionActiva"><div class="session-pill">● SESIÓN ACTIVA</div><strong id="sesionEmail"></strong><p>Ya estás dentro de TIPTOPS. ¡A descubrir y compartir consejos!</p><button class="light" onclick="cerrarSesion()">Cerrar sesión</button></section>
  <section class="panel" id="cuenta">
   <h2>Tu cuenta TIPTOPS</h2>
   <p class="muted">Registrate o ingresá para compartir y valorar consejos.</p>
@@ -187,8 +220,8 @@ header button.green{background:#ffd45e;color:#173b4a;border-radius:24px;padding:
   <label for="password">Contraseña</label>
   <input id="password" type="password" autocomplete="current-password" placeholder="Contraseña (mínimo 6 caracteres)">
   <div class="row">
-   <button class="green" onclick="ingresar()">Entrar a TIPTOPS</button>
-   <button onclick="registrar()">Crear cuenta</button>
+   <button class="green" id="btnIngresar" type="button" onclick="ingresar()">Entrar a TIPTOPS</button>
+   <button id="btnRegistrar" type="button" onclick="registrar()">Crear cuenta</button>
    <button class="light hidden" id="salir" onclick="cerrarSesion()">Salir</button>
   </div>
   <div id="estado" class="status">No has iniciado sesión.</div>
@@ -259,16 +292,22 @@ function escapar(s){
 function mensaje(s){
  document.getElementById("estado").textContent=s;
 }
-async function actualizarSesion(){
- const {data} = await db.auth.getSession();
- usuario = data.session?.user || null;
-
+function mostrarEstadoSesion(session){
+ usuario=session?.user||null;
  document.getElementById("cuenta").classList.toggle("hidden",!!usuario);
+ document.getElementById("sesionActiva").classList.toggle("hidden",!usuario);
  document.getElementById("crear").classList.add("hidden");
- document.getElementById("salir").classList.toggle("hidden",!usuario);
-
-
- mensaje(usuario ? "Sesión iniciada: "+usuario.email : "No has iniciado sesión.");
+ if(usuario){
+  document.getElementById("sesionEmail").textContent=usuario.email||"Cuenta TIPTOPS";
+  document.getElementById("estado").textContent="Sesión iniciada correctamente.";
+ }else{
+  document.getElementById("estado").textContent="No has iniciado sesión. Ingresá con tu correo y contraseña.";
+ }
+}
+async function actualizarSesion(){
+ const {data,error}=await db.auth.getSession();
+ if(error){mensaje("No se pudo comprobar la sesión: "+error.message);return;}
+ mostrarEstadoSesion(data.session);
 }
 
 async function mostrarPerfil(){
@@ -304,18 +343,31 @@ async function mostrarPerfil(){
 async function registrar(){
  const email=document.getElementById("email").value.trim();
  const password=document.getElementById("password").value;
- if(!email || password.length<6){mensaje("Ingresá un correo y una contraseña de al menos 6 caracteres.");return;}
- const {error}=await db.auth.signUp({email,password});
- mensaje(error ? error.message : "Registro enviado. Si te pide confirmar el correo, revisá tu bandeja de entrada.");
- await actualizarSesion();
+ if(!email || password.length<6){mensaje("Ingresá un correo válido y una contraseña de al menos 6 caracteres.");return;}
+ const boton=document.getElementById("btnRegistrar");
+ boton.disabled=true;boton.textContent="Creando cuenta...";
+ try{
+  const {data,error}=await db.auth.signUp({email,password});
+  if(error) throw error;
+  if(data.session){mostrarEstadoSesion(data.session);await cargarTips();}
+  else mensaje("Registro recibido. Revisá tu correo para confirmar la cuenta y después iniciá sesión.");
+ }catch(e){mensaje("No se pudo crear la cuenta: "+e.message);}
+ finally{boton.disabled=false;boton.textContent="Crear cuenta";}
 }
 async function ingresar(){
  const email=document.getElementById("email").value.trim();
  const password=document.getElementById("password").value;
- const {error}=await db.auth.signInWithPassword({email,password});
- mensaje(error ? error.message : "¡Bienvenido a TIPTOPS!");
- await actualizarSesion();
- await cargarTips();
+ if(!email||!password){mensaje("Escribí tu correo y contraseña antes de entrar.");return;}
+ const boton=document.getElementById("btnIngresar");
+ boton.disabled=true;boton.textContent="Ingresando...";
+ try{
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  if(error) throw error;
+  mostrarEstadoSesion(data.session);
+  mensaje("¡Bienvenido a TIPTOPS! Sesión iniciada como "+(data.user.email||email));
+  await cargarTips();
+ }catch(e){mensaje("No se pudo iniciar sesión: "+e.message);}
+ finally{boton.disabled=false;boton.textContent="Entrar a TIPTOPS";}
 }
 function toggleCrear(){
  if(!usuario){
@@ -326,8 +378,9 @@ function toggleCrear(){
  document.getElementById("crear").scrollIntoView({behavior:"smooth"});
 } 
 async function cerrarSesion(){
- await db.auth.signOut();
- await actualizarSesion();
+ const {error}=await db.auth.signOut();
+ if(error){mensaje("No se pudo cerrar sesión: "+error.message);return;}
+ mostrarEstadoSesion(null);
  await cargarTips();
 }
 async function publicarTip(){
@@ -472,8 +525,9 @@ async function comentar(tipId){
  if(error){alert(error.message);return;}
  await verComentarios(tipId);
 }
-db.auth.onAuthStateChange(async()=>{
- await actualizarSesion();
+db.auth.onAuthStateChange((event,session)=>{
+ mostrarEstadoSesion(session);
+ if(event==="SIGNED_IN"||event==="SIGNED_OUT") cargarTips();
 });
 actualizarSesion();
 cargarTips();
