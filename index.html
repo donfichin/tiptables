@@ -540,7 +540,23 @@ function tipOpenAccount(){
 }
 function tipCloseAccount(){document.getElementById("tipCuentaOverlay").classList.remove("open");}
 function tipCloseProfile(){document.getElementById("tipProfileOverlay").classList.remove("open");}
-async function tipShowMyPosts(){tipCloseProfile();await mostrarPerfil();}
+async function tipShowMyPosts(){
+ const card=document.getElementById("tipProfileCard");
+ card.innerHTML='<h2>Mis publicaciones</h2><p>Cargando tus consejos...</p><button class="secondary" onclick="tipOpenAccount()">Volver al perfil</button>';
+ tipCloseProfile();
+ const {data,error}=await db.from("tips").select("id,title,category,created_at").eq("user_id",usuario.id).order("created_at",{ascending:false});
+ card.innerHTML='<h2>Mis publicaciones</h2>'+(error?'<p>No se pudieron cargar: '+escapar(error.message)+'</p>':(data&&data.length?data.map(t=>'<div class="comment"><strong>'+escapar(t.title)+'</strong><br><small>'+escapar(t.category)+' · '+new Date(t.created_at).toLocaleDateString("es-AR")+'</small></div>').join(""):'<p>Todavía no publicaste consejos.</p>'))+'<button class="secondary" onclick="tipOpenAccount()">Volver al perfil</button>';
+ document.getElementById("tipProfileOverlay").classList.add("open");
+}
+async function verPerfilPublico(userId){
+ const card=document.getElementById("tipProfileCard");
+ card.innerHTML='<h2>Perfil del creador</h2><p>Cargando...</p>';
+ document.getElementById("tipProfileOverlay").classList.add("open");
+ const {data:perfil}=await db.from("profiles").select("display_name,username,bio").eq("user_id",userId).maybeSingle();
+ const {data:tips}=await db.from("tips").select("title,category").eq("user_id",userId).order("created_at",{ascending:false}).limit(10);
+ const nombre=perfil?.display_name||perfil?.username||"Miembro de TIPTOPS";
+ card.innerHTML='<div class="profile-avatar">♙</div><h2>'+escapar(nombre)+'</h2>'+(perfil?.bio?'<p>'+escapar(perfil.bio)+'</p>':'')+'<h3>Consejos publicados</h3>'+((tips||[]).map(t=>'<div class="comment"><strong>'+escapar(t.title)+'</strong><br><small>'+escapar(t.category)+'</small></div>').join("")||'<p>Este creador todavía no tiene publicaciones.</p>')+'<button class="secondary" onclick="tipCloseProfile()">Volver al feed</button>';
+}
 function tipOpenCreate(){
  if(!usuario){tipOpenAccount();tipToast("Ingresá para compartir tu video");return;}
  const ov=document.getElementById("tipCrearOverlay");ov.classList.add("open");
