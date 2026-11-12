@@ -430,6 +430,44 @@ main>section:last-of-type>.row{display:none!important}
  #tipTopTabs{left:0;right:0}
  #tipCrearOverlay{align-items:center}
  }
+
+/* Ajustes de accesibilidad y tamaño para teléfonos */
+html,body{font-size:16px;-webkit-text-size-adjust:100%}
+#feed .tip{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+#feed .tip video{height:calc(100% - (88px + env(safe-area-inset-bottom)))}
+#feed .tip:after{bottom:calc(88px + env(safe-area-inset-bottom))}
+#feed .tip .category{font-size:14px;line-height:1.35;margin-bottom:10px}
+#feed .tip h3{font-size:clamp(24px,6vw,29px);line-height:1.2;margin-bottom:10px}
+#feed .tip p{font-size:16px;line-height:1.45;-webkit-line-clamp:4}
+#feed .tip .muted{font-size:12px;line-height:1.35}
+#feed .tip .actions{right:10px;bottom:calc(116px + env(safe-area-inset-bottom));gap:16px}
+#feed .tip .actions button,
+#feed .tip .actions button:first-child,
+#feed .tip .actions button:nth-child(2),
+#feed .tip .actions button:last-child{width:68px;min-height:58px;padding:8px 5px;font-size:11px;line-height:1.25;border-radius:16px}
+#feed .tip .actions button b,
+#feed .tip .actions button strong{font-size:25px}
+#tipTopTabs{height:50px;gap:30px}
+#tipTopTabs button{font-size:16px;padding:10px 8px}
+#tipBottomNav{height:calc(76px + env(safe-area-inset-bottom));padding:7px 8px calc(7px + env(safe-area-inset-bottom));}
+#tipBottomNav button{min-width:58px;min-height:54px;padding:6px 7px;gap:5px;font-size:12px;font-weight:700}
+#tipBottomNav button b{font-size:26px}
+#tipBottomNav #navCrear{width:62px;height:54px;min-width:62px;border-radius:17px;font-size:13px;gap:0}
+#tipBottomNav #navCrear b{font-size:30px}
+#tipBottomNav button.active{font-weight:900}
+#tipCuentaOverlay #cuenta,#tipCrearOverlay #crear{font-size:16px}
+#tipCuentaOverlay label,#tipCrearOverlay label{font-size:15px;font-weight:700}
+#tipCuentaOverlay input,#tipCrearOverlay input,#tipCrearOverlay textarea,#tipCrearOverlay select{font-size:16px;min-height:48px}
+#tipCuentaOverlay button,#tipCrearOverlay button,#tipSearch button{font-size:15px;min-height:46px}
+#tipSearch{font-size:16px}
+#tipSearch input{font-size:16px;min-height:50px}
+@media(max-width:380px){
+ #tipBottomNav{padding-left:3px;padding-right:3px}
+ #tipBottomNav button{min-width:52px;padding-left:3px;padding-right:3px;font-size:11px}
+ #tipBottomNav #navCrear{min-width:56px;width:56px}
+ #feed .tip .actions button{width:62px}
+}
+
 </style>
 </head>
 <body>
