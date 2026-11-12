@@ -1,0 +1,19 @@
+{
+  "name": "TIPTOPS — Todos sabemos algo",
+  "short_name": "TIPTOPS",
+  "description": "Compartí lo que sabés y aprendé algo nuevo.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#101812",
+  "theme_color": "#101812",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
