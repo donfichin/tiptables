@@ -344,6 +344,7 @@ main>section:last-of-type>.row{display:none!important}
 }
 
 #tipBottomNav #navCrear{width:auto;min-width:92px;height:46px;padding:0 12px;border-radius:14px;background:#f5c451;color:#192a32;font-size:12px;font-weight:900;display:flex;flex-direction:row;gap:5px;white-space:nowrap;box-shadow:0 3px 0 #b98927}#tipBottomNav #navCrear b{font-size:23px}#tipSearch{position:fixed;inset:0;z-index:90;background:#eef3f4;color:#172b34;padding:18px 14px calc(22px + env(safe-area-inset-bottom));overflow-y:auto}#tipSearch .search-shell{width:min(100%,720px);margin:0 auto}#tipSearch input{display:block;width:100%;max-width:100%;box-sizing:border-box;margin:20px 0 14px;padding:14px 16px;border:1px solid #bdcbd0;border-radius:14px;background:white;color:#172b34;font-size:16px}#tipSearchResults{width:100%;max-width:720px;margin:0 auto}#tipSearchResults button{display:block;width:100%;box-sizing:border-box;text-align:left;margin:8px 0;padding:14px 16px;background:white;color:#172b34;border:1px solid #dce5e8;border-radius:14px}#tipCuentaOverlay{overflow-y:auto}#tipCuentaOverlay #cuenta{position:relative}#tipCuentaOverlay #cuenta .account-close{position:absolute;right:14px;top:12px;width:34px;height:34px;padding:0;border-radius:50%;background:#e8eef0;color:#19333d;font-size:20px}#tipProfileOverlay{display:none;position:fixed;inset:0;z-index:110;background:#071116d9;align-items:flex-end;justify-content:center;padding:12px}#tipProfileOverlay.open{display:flex}#tipProfileCard{width:min(100%,520px);padding:24px 20px calc(20px + env(safe-area-inset-bottom));border-radius:22px;background:#f7fafb;color:#172b34;box-shadow:0 10px 40px #0005}#tipProfileCard .profile-avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:#dff4ec;color:#173f49;font-size:30px;margin-bottom:12px}#tipProfileCard .profile-email{overflow-wrap:anywhere;font-weight:700;margin:10px 0}#tipProfileCard button{width:100%;margin-top:9px;border-radius:24px;background:#173f49;color:white}#tipProfileCard button.secondary{background:#e6eef0;color:#173f49}@media(min-width:700px){#tipSearch{padding:28px 24px}#tipSearch .search-shell{margin:32px auto}#tipProfileOverlay{align-items:center}#tipBottomNav #navCrear{width:140px;min-width:140px}}@media(max-width:380px){#tipBottomNav{padding-left:3px;padding-right:3px}#tipBottomNav button{min-width:48px;padding-left:4px;padding-right:4px;font-size:9px}#tipBottomNav #navCrear{min-width:76px;padding:0 6px;font-size:10px}}
+#tipBottomNav button.active{background:#dff4ec;color:#123c37;box-shadow:0 0 0 2px #9adbc8 inset;font-weight:900}#tipBottomNav button.active b{color:#087b68}#tipBottomNav #navCrear.active{background:#ffd66e;color:#382900;box-shadow:0 0 0 3px #fff1c4,0 3px 0 #b98927}#tipSearch .search-controls{display:flex;gap:9px;margin:14px 0}#tipSearch .search-controls button{flex:1;padding:11px 8px;border-radius:22px;background:#dfe9eb;color:#23404a;font-size:12px}#tipSearch .search-controls button.active{background:#173f49;color:#fff;font-weight:900}#tipSearch .search-entry{display:flex;gap:8px}#tipSearch .search-entry input{flex:1;min-width:0;margin:0}#tipSearch .search-entry button{padding:0 18px;border-radius:14px;background:#ffca57;color:#26343a;font-weight:900}#tipSearch .search-hint{font-size:12px;color:#657780;margin:8px 2px}
 </style>
 </head>
 <body>
@@ -406,13 +407,17 @@ main>section:last-of-type>.row{display:none!important}
 
 <div id="tipTopTabs"><button class="active" onclick="tipToast('Estás viendo los consejos de la comunidad')">Para vos</button><button onclick="tipToast('La sección Siguiendo estará disponible próximamente')">Siguiendo</button></div>
 <nav id="tipBottomNav">
- <button class="active" onclick="tipGoHome()"><b>⌂</b>Inicio</button>
- <button onclick="tipOpenSearch()"><b>⌕</b>Buscar</button>
+ <button id="navHome" class="active" onclick="tipGoHome()"><b>⌂</b>Inicio</button>
+ <button id="navSearch" onclick="tipOpenSearch()"><b>⌕</b>Buscar</button>
  <button id="navCrear" onclick="tipOpenCreate()"><b>＋</b><span>PUBLICAR</span></button>
  <button onclick="tipToast('Tu actividad estará disponible próximamente')"><b>♡</b>Actividad</button>
- <button onclick="tipOpenAccount()"><b>♙</b>Perfil</button>
+ <button id="navProfile" onclick="tipSetActiveNav('navProfile');tipOpenAccount()"><b>♙</b>Perfil</button>
 </nav>
-<div id="tipSearch"><div class="search-shell"><button onclick="tipCloseSearch()">← Volver</button><h2>Buscar consejos</h2><input id="tipSearchInput" placeholder="Buscar por tema, título o categoría" oninput="tipFilterSearch()"><div id="tipSearchResults"></div></div></div>
+<div id="tipSearch"><div class="search-shell">
+<button onclick="tipCloseSearch()">← Volver al inicio</button><h2>Buscar consejos</h2>
+<div class="search-controls"><button id="searchAll" class="active" onclick="tipSetSearchScope('all')">Toda la comunidad</button><button id="searchMine" onclick="tipSetSearchScope('mine')">Mis publicaciones</button></div>
+<form class="search-entry" onsubmit="event.preventDefault();tipFilterSearch()"><input id="tipSearchInput" placeholder="Tema, título o palabra clave" oninput="tipFilterSearch()"><button type="submit">BUSCAR</button></form>
+<p class="search-hint">También podés presionar Enter para buscar.</p><div id="searchResultCount"></div><div id="tipSearchResults"></div></div></div>
 <div id="tipProfileOverlay" onclick="if(event.target===this)tipCloseProfile()"><div id="tipProfileCard"></div></div>
 <div id="tipToast"></div>
 <footer>TIPTOPS · Todos sabemos algo. Compartilo.</footer>
@@ -529,7 +534,7 @@ function tipToast(msg){
  const el=document.getElementById("tipToast");el.textContent=msg;el.style.display="block";
  clearTimeout(window.tipToastTimer);window.tipToastTimer=setTimeout(()=>el.style.display="none",2200);
 }
-function tipOpenAccount(){
+function tipOpenAccount(){tipSetActiveNav("navProfile");
  if(usuario){
   document.getElementById("tipProfileCard").innerHTML='<div class="profile-avatar">♙</div><h2>Tu perfil TIPTOPS</h2><div class="session-pill">● SESIÓN ACTIVA</div><div class="profile-email">'+escapar(usuario.email||"Cuenta TIPTOPS")+'</div><p>Tu cuenta está conectada. Ya podés valorar, comentar y publicar consejos.</p><button onclick="tipShowMyPosts()">Ver mis publicaciones</button><button class="secondary" onclick="cerrarSesion();tipCloseProfile()">Cerrar sesión</button><button class="secondary" onclick="tipCloseProfile()">Volver al feed</button>';
   document.getElementById("tipProfileOverlay").classList.add("open");
@@ -557,23 +562,25 @@ async function verPerfilPublico(userId){
  const nombre=perfil?.display_name||perfil?.username||"Miembro de TIPTOPS";
  card.innerHTML='<div class="profile-avatar">♙</div><h2>'+escapar(nombre)+'</h2>'+(perfil?.bio?'<p>'+escapar(perfil.bio)+'</p>':'')+'<h3>Consejos publicados</h3>'+((tips||[]).map(t=>'<div class="comment"><strong>'+escapar(t.title)+'</strong><br><small>'+escapar(t.category)+'</small></div>').join("")||'<p>Este creador todavía no tiene publicaciones.</p>')+'<button class="secondary" onclick="tipCloseProfile()">Volver al feed</button>';
 }
-function tipOpenCreate(){
+function tipOpenCreate(){tipSetActiveNav("navCrear");
  if(!usuario){tipOpenAccount();tipToast("Ingresá para compartir tu video");return;}
  const ov=document.getElementById("tipCrearOverlay");ov.classList.add("open");
  const crear=document.getElementById("crear");document.getElementById("crearMount").appendChild(crear);
 }
 function tipCloseCreate(){document.getElementById("tipCrearOverlay").classList.remove("open");}
-function tipGoHome(){document.getElementById("tipSearch").classList.remove("open");document.getElementById("feed").scrollTo({top:0,behavior:"smooth"});}
-function tipOpenSearch(){
- document.getElementById("tipSearch").classList.add("open");
- document.getElementById("tipSearchInput").focus();
- tipFilterSearch();
-}
-function tipCloseSearch(){document.getElementById("tipSearch").classList.remove("open");}
+let tipSearchScope="all";
+function tipSetActiveNav(id){document.querySelectorAll("#tipBottomNav button").forEach(b=>b.classList.remove("active"));const el=document.getElementById(id);if(el)el.classList.add("active");}
+function tipGoHome(){document.getElementById("tipSearch").classList.remove("open");document.getElementById("feed").scrollTo({top:0,behavior:"smooth"});tipSetActiveNav("navHome");}
+function tipOpenSearch(){tipSetActiveNav("navSearch");document.getElementById("tipSearch").classList.add("open");document.getElementById("tipSearchInput").focus();tipFilterSearch();}
+function tipCloseSearch(){document.getElementById("tipSearch").classList.remove("open");tipSetActiveNav("navHome");}
+function tipSetSearchScope(scope){tipSearchScope=scope;document.getElementById("searchAll").classList.toggle("active",scope==="all");document.getElementById("searchMine").classList.toggle("active",scope==="mine");tipFilterSearch();}
 function tipFilterSearch(){
- const q=(document.getElementById("tipSearchInput").value||"").toLowerCase();
- const found=publicaciones.filter(t=>(t.title+" "+t.description+" "+t.category).toLowerCase().includes(q));
- document.getElementById("tipSearchResults").innerHTML=found.map(t=>'<button onclick="tipJumpTo(\''+t.id+'\')"><strong>'+escapar(t.title)+'</strong><br><small>'+escapar(t.category)+'</small></button>').join("")||'<p>No encontramos consejos con esa búsqueda.</p>';
+ const q=(document.getElementById("tipSearchInput").value||"").trim().toLowerCase();
+ let base=publicaciones;
+ if(tipSearchScope==="mine")base=usuario?publicaciones.filter(t=>t.user_id===usuario.id):[];
+ const found=base.filter(t=>(t.title+" "+t.description+" "+t.category).toLowerCase().includes(q));
+ document.getElementById("searchResultCount").textContent=found.length+" publicación(es) encontrada(s)";
+ document.getElementById("tipSearchResults").innerHTML=found.map(t=>'<button onclick="tipJumpTo(\''+t.id+'\')"><strong>'+escapar(t.title)+'</strong><br><small>'+escapar(t.category)+'</small></button>').join("")||'<p>'+(tipSearchScope==="mine"&&!usuario?"Iniciá sesión para ver tus publicaciones.":"No encontramos consejos con esa búsqueda.")+'</p>';
 }
 function tipJumpTo(id){
  const cards=[...document.querySelectorAll("#feed .tip")];
