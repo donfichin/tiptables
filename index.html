@@ -468,6 +468,22 @@ html,body{font-size:16px;-webkit-text-size-adjust:100%}
  #feed .tip .actions button{width:62px}
 }
 
+
+/* Legibilidad móvil: tamaños reforzados con prioridad sobre estilos anteriores */
+html,body{font-size:17px!important;-webkit-text-size-adjust:100%!important}
+#feed .tip .category{font-size:15px!important;line-height:1.4!important}
+#feed .tip h3{font-size:28px!important;line-height:1.22!important}
+#feed .tip p{font-size:17px!important;line-height:1.5!important}
+#feed .tip .muted{font-size:13px!important;line-height:1.4!important}
+#feed .tip .actions button{width:70px!important;min-height:60px!important;font-size:12px!important;padding:9px 5px!important}
+#tipTopTabs button{font-size:17px!important;padding:11px 9px!important}
+#tipBottomNav button{font-size:14px!important;min-width:58px!important;min-height:58px!important;padding:7px 6px!important;gap:5px!important}
+#tipBottomNav button b{font-size:28px!important}
+#tipBottomNav #navCrear{width:64px!important;min-width:64px!important;height:56px!important;font-size:15px!important}
+#tipBottomNav #navCrear b{font-size:32px!important}
+#tipCuentaOverlay input,#tipCrearOverlay input,#tipCrearOverlay textarea,#tipCrearOverlay select{font-size:17px!important;min-height:50px!important}
+#tipCuentaOverlay button,#tipCrearOverlay button{font-size:16px!important;min-height:48px!important}
+
 </style>
 </head>
 <body>
@@ -847,7 +863,7 @@ function toggleComentarios(tipId){
  if(zona.classList.contains("open")){zona.classList.remove("open");return;}
  verComentarios(tipId);
 }
-async function verComentarios(tipId){
+async function verComentarios(tipId, mostrarFormulario=true){
  const zona=document.getElementById("comentarios-"+tipId);
  if(!zona)return;
  zona.classList.add("open");
@@ -856,8 +872,9 @@ async function verComentarios(tipId){
  if(error){zona.innerHTML='<div class="comment-empty">No se pudieron cargar: '+escapar(error.message)+'</div>';return;}
  const lista=(data||[]).map(c=>'<div class="comment">'+escapar(c.body)+'</div>').join("");
  zona.innerHTML=(lista||'<div class="comment-empty">Todavía no hay comentarios. ¡Sé el primero!</div>')+
- '<textarea id="comentario-'+tipId+'" placeholder="Escribí un comentario..."></textarea>'+
- '<button type="button" onclick="comentar(\''+tipId+'\')">Enviar comentario</button>';
+ (mostrarFormulario
+ ? '<textarea id="comentario-'+tipId+'" placeholder="Escribí un comentario..."></textarea><button type="button" onclick="comentar(\''+tipId+'\')">Enviar comentario</button>'
+ : '<button type="button" class="comment-again" onclick="verComentarios(\''+tipId+'\',true)">＋ Agregar otro comentario</button>');
 }
 async function comentar(tipId){
  if(!usuario){alert("Iniciá sesión para comentar.");return;}
@@ -869,7 +886,7 @@ async function comentar(tipId){
  boton.disabled=true;boton.textContent="Enviando...";
  const {error}=await db.from("tip_comments").insert({tip_id:tipId,user_id:usuario.id,body});
  if(error){alert("No se pudo enviar: "+error.message);boton.disabled=false;boton.textContent="Enviar comentario";return;}
- await verComentarios(tipId);
+ await verComentarios(tipId,false);
 }
 db.auth.onAuthStateChange((event,session)=>{
  mostrarEstadoSesion(session);
