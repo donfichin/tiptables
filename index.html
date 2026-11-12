@@ -343,6 +343,7 @@ main>section:last-of-type>.row{display:none!important}
  #feed .tip h3{font-size:18px}
 }
 
+#tipBottomNav #navCrear{width:auto;min-width:92px;height:46px;padding:0 12px;border-radius:14px;background:#f5c451;color:#192a32;font-size:12px;font-weight:900;display:flex;flex-direction:row;gap:5px;white-space:nowrap;box-shadow:0 3px 0 #b98927}#tipBottomNav #navCrear b{font-size:23px}#tipSearch{position:fixed;inset:0;z-index:90;background:#eef3f4;color:#172b34;padding:18px 14px calc(22px + env(safe-area-inset-bottom));overflow-y:auto}#tipSearch .search-shell{width:min(100%,720px);margin:0 auto}#tipSearch input{display:block;width:100%;max-width:100%;box-sizing:border-box;margin:20px 0 14px;padding:14px 16px;border:1px solid #bdcbd0;border-radius:14px;background:white;color:#172b34;font-size:16px}#tipSearchResults{width:100%;max-width:720px;margin:0 auto}#tipSearchResults button{display:block;width:100%;box-sizing:border-box;text-align:left;margin:8px 0;padding:14px 16px;background:white;color:#172b34;border:1px solid #dce5e8;border-radius:14px}#tipCuentaOverlay{overflow-y:auto}#tipCuentaOverlay #cuenta{position:relative}#tipCuentaOverlay #cuenta .account-close{position:absolute;right:14px;top:12px;width:34px;height:34px;padding:0;border-radius:50%;background:#e8eef0;color:#19333d;font-size:20px}#tipProfileOverlay{display:none;position:fixed;inset:0;z-index:110;background:#071116d9;align-items:flex-end;justify-content:center;padding:12px}#tipProfileOverlay.open{display:flex}#tipProfileCard{width:min(100%,520px);padding:24px 20px calc(20px + env(safe-area-inset-bottom));border-radius:22px;background:#f7fafb;color:#172b34;box-shadow:0 10px 40px #0005}#tipProfileCard .profile-avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:#dff4ec;color:#173f49;font-size:30px;margin-bottom:12px}#tipProfileCard .profile-email{overflow-wrap:anywhere;font-weight:700;margin:10px 0}#tipProfileCard button{width:100%;margin-top:9px;border-radius:24px;background:#173f49;color:white}#tipProfileCard button.secondary{background:#e6eef0;color:#173f49}@media(min-width:700px){#tipSearch{padding:28px 24px}#tipSearch .search-shell{margin:32px auto}#tipProfileOverlay{align-items:center}#tipBottomNav #navCrear{width:140px;min-width:140px}}@media(max-width:380px){#tipBottomNav{padding-left:3px;padding-right:3px}#tipBottomNav button{min-width:48px;padding-left:4px;padding-right:4px;font-size:9px}#tipBottomNav #navCrear{min-width:76px;padding:0 6px;font-size:10px}}
 </style>
 </head>
 <body>
@@ -355,7 +356,7 @@ main>section:last-of-type>.row{display:none!important}
  <div id="tipCrearOverlay" onclick="if(event.target===this)tipCloseCreate()"><section id="crearMount"></section></div>
  <section class="panel hidden" id="sesionActiva"><div class="session-pill">● SESIÓN ACTIVA</div><strong id="sesionEmail"></strong><p>Ya estás dentro de TIPTOPS. ¡A descubrir y compartir consejos!</p><button class="light" onclick="cerrarSesion()">Cerrar sesión</button></section>
  <section class="panel" id="cuenta">
-  <h2>Tu cuenta TIPTOPS</h2>
+  <button type="button" class="account-close" onclick="tipCloseAccount()" aria-label="Cerrar">×</button><h2>Tu cuenta TIPTOPS</h2>
   <p class="muted">Registrate o ingresá para compartir y valorar consejos.</p>
   <label for="email">Correo electrónico</label>
   <input id="email" type="email" autocomplete="email" placeholder="Tu correo electrónico">
@@ -407,11 +408,12 @@ main>section:last-of-type>.row{display:none!important}
 <nav id="tipBottomNav">
  <button class="active" onclick="tipGoHome()"><b>⌂</b>Inicio</button>
  <button onclick="tipOpenSearch()"><b>⌕</b>Buscar</button>
- <button id="navCrear" onclick="tipOpenCreate()"><b>＋</b></button>
+ <button id="navCrear" onclick="tipOpenCreate()"><b>＋</b><span>PUBLICAR</span></button>
  <button onclick="tipToast('Tu actividad estará disponible próximamente')"><b>♡</b>Actividad</button>
  <button onclick="tipOpenAccount()"><b>♙</b>Perfil</button>
 </nav>
-<div id="tipSearch"><button onclick="tipCloseSearch()">← Volver</button><h2>Buscar consejos</h2><input id="tipSearchInput" placeholder="Buscar por tema, título o categoría" oninput="tipFilterSearch()"><div id="tipSearchResults"></div></div>
+<div id="tipSearch"><div class="search-shell"><button onclick="tipCloseSearch()">← Volver</button><h2>Buscar consejos</h2><input id="tipSearchInput" placeholder="Buscar por tema, título o categoría" oninput="tipFilterSearch()"><div id="tipSearchResults"></div></div></div>
+<div id="tipProfileOverlay" onclick="if(event.target===this)tipCloseProfile()"><div id="tipProfileCard"></div></div>
 <div id="tipToast"></div>
 <footer>TIPTOPS · Todos sabemos algo. Compartilo.</footer>
 
@@ -450,8 +452,6 @@ function mostrarEstadoSesion(session){
  document.getElementById("cuenta").classList.toggle("hidden",!!usuario);
  document.getElementById("sesionActiva").classList.toggle("hidden",!usuario);
  document.getElementById("crear").classList.add("hidden");
- const acceso=document.getElementById("tipCuentaOverlay");
- if(acceso) acceso.classList.toggle("open",!usuario);
  if(usuario){
   document.getElementById("sesionEmail").textContent=usuario.email||"Cuenta TIPTOPS";
   document.getElementById("estado").textContent="Sesión iniciada correctamente.";
@@ -530,10 +530,17 @@ function tipToast(msg){
  clearTimeout(window.tipToastTimer);window.tipToastTimer=setTimeout(()=>el.style.display="none",2200);
 }
 function tipOpenAccount(){
- if(usuario){tipToast("Sesión iniciada: "+(usuario.email||"TIPTOPS"));return;}
+ if(usuario){
+  document.getElementById("tipProfileCard").innerHTML='<div class="profile-avatar">♙</div><h2>Tu perfil TIPTOPS</h2><div class="session-pill">● SESIÓN ACTIVA</div><div class="profile-email">'+escapar(usuario.email||"Cuenta TIPTOPS")+'</div><p>Tu cuenta está conectada. Ya podés valorar, comentar y publicar consejos.</p><button onclick="tipShowMyPosts()">Ver mis publicaciones</button><button class="secondary" onclick="cerrarSesion();tipCloseProfile()">Cerrar sesión</button><button class="secondary" onclick="tipCloseProfile()">Volver al feed</button>';
+  document.getElementById("tipProfileOverlay").classList.add("open");
+  return;
+ }
  const ov=document.getElementById("tipCuentaOverlay");ov.classList.add("open");
  const cuenta=document.getElementById("cuenta");document.getElementById("cuentaMount").appendChild(cuenta);
 }
+function tipCloseAccount(){document.getElementById("tipCuentaOverlay").classList.remove("open");}
+function tipCloseProfile(){document.getElementById("tipProfileOverlay").classList.remove("open");}
+async function tipShowMyPosts(){tipCloseProfile();await mostrarPerfil();}
 function tipOpenCreate(){
  if(!usuario){tipOpenAccount();tipToast("Ingresá para compartir tu video");return;}
  const ov=document.getElementById("tipCrearOverlay");ov.classList.add("open");
@@ -720,7 +727,7 @@ async function comentar(tipId){
 }
 db.auth.onAuthStateChange((event,session)=>{
  mostrarEstadoSesion(session);
- if(session?.user){document.getElementById("tipCuentaOverlay").classList.remove("open");}
+ if(session?.user){document.getElementById("tipCuentaOverlay").classList.remove("open");document.getElementById("tipProfileOverlay").classList.remove("open");}
  if(event==="SIGNED_IN"||event==="SIGNED_OUT") cargarTips();
 });
 actualizarSesion();
