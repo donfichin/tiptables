@@ -667,13 +667,13 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
  </section>
 </main>
 
-<div id="tipTopTabs"><span class="tip-brand">TIP<span>TOPS</span></span><div class="tip-tabs"><button onclick="tipTopSelect(this,'LIVE')">LIVE</button><button onclick="tipTopSelect(this,'COMUNIDAD')">Comunidad</button><button onclick="tipTopSelect(this,'SIGUIENDO')">Siguiendo</button><button class="active" onclick="tipTopSelect(this,'PARA TI')">Para ti</button></div><button class="tip-top-search" aria-label="Buscar" onclick="tipOpenSearch()">⌕</button></div>
+<div id="tipTopTabs"><span class="tip-brand">TIP<span>NOVA</span></span><div class="tip-tabs"><button onclick="tipTopSelect(this,'LIVE')">LIVE</button><button onclick="tipTopSelect(this,'COMUNIDAD')">Comunidad</button><button onclick="tipTopSelect(this,'SIGUIENDO')">Siguiendo</button><button class="active" onclick="tipTopSelect(this,'PARA TI')">Para ti</button></div><button class="tip-top-search" aria-label="Buscar" onclick="tipOpenSearch()">⌕</button></div>
 <nav id="tipBottomNav">
- <button id="navHome" class="active" onclick="tipGoHome()"><b>⌂</b>Inicio</button>
- <button id="navSearch" onclick="tipOpenSearch()"><b>⌕</b>Buscar</button>
- <button id="navCrear" onclick="tipOpenCreate()"><b>＋</b><span>PUBLICAR</span></button>
- <button onclick="tipToast('Tu actividad estará disponible próximamente')"><b>♡</b>Actividad</button>
- <button id="navProfile" onclick="tipSetActiveNav('navProfile');tipOpenAccount()"><b>♙</b>Perfil</button>
+ <button id="navHome" class="active" onclick="tipGoHome()"><b>⌂</b><span>Inicio</span></button>
+ <button id="navFriends" onclick="tipOpenFriends()"><b>♧</b><span>Amigos</span></button>
+ <button id="navCrear" onclick="tipOpenCreate()"><b>＋</b><span>Crear</span></button>
+ <button id="navMessages" onclick="tipOpenMessages()"><b>▤</b><span>Mensajes</span></button>
+ <button id="navProfile" onclick="tipSetActiveNav('navProfile');tipOpenAccount()"><b>♙</b><span>Perfil</span></button>
 </nav>
 <div id="tipSearch"><div class="search-shell">
 <button onclick="tipCloseSearch()">← Volver al inicio</button><h2>Buscar consejos</h2>
@@ -842,6 +842,8 @@ function tipTopSelect(button,section){
 let tipSearchScope="all";
 function tipSetActiveNav(id){document.querySelectorAll("#tipBottomNav button").forEach(b=>b.classList.remove("active"));const el=document.getElementById(id);if(el)el.classList.add("active");}
 function tipGoHome(){document.getElementById("tipSearch").classList.remove("open");document.getElementById("feed").scrollTo({top:0,behavior:"smooth"});tipSetActiveNav("navHome");}
+function tipOpenFriends(){tipSetActiveNav("navFriends");tipToast("Amigos: próximamente vas a poder encontrar y seguir a tus amigos.");}
+function tipOpenMessages(){tipSetActiveNav("navMessages");tipToast("Mensajes: estamos preparando el chat privado.");}
 function tipOpenSearch(){tipSetActiveNav("navSearch");document.getElementById("tipSearch").classList.add("open");document.getElementById("tipSearchInput").focus();tipFilterSearch();}
 function tipCloseSearch(){document.getElementById("tipSearch").classList.remove("open");tipSetActiveNav("navHome");}
 function tipSetSearchScope(scope){tipSearchScope=scope;document.getElementById("searchAll").classList.toggle("active",scope==="all");document.getElementById("searchMine").classList.toggle("active",scope==="mine");tipFilterSearch();}
