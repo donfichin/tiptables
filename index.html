@@ -607,6 +607,53 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
  #tipTopTabs .tip-top-search{flex-basis:38px!important;width:38px!important}
 }
 
+
+/* Ajustes de legibilidad solicitados: pestañas superiores e icono Amigos */
+#tipTopTabs{
+  height:78px!important;
+  padding:8px 12px!important;
+  gap:10px!important;
+}
+#tipTopTabs .tip-brand{
+  font-size:21px!important;
+  flex:0 0 auto!important;
+}
+#tipTopTabs .tip-tabs{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-evenly!important;
+  gap:8px!important;
+  overflow-x:auto!important;
+  scrollbar-width:none!important;
+}
+#tipTopTabs .tip-tabs::-webkit-scrollbar{display:none!important}
+#tipTopTabs .tip-tabs button{
+  font-size:14px!important;
+  font-weight:900!important;
+  line-height:1.15!important;
+  white-space:nowrap!important;
+  padding:12px 5px!important;
+  min-height:50px!important;
+  letter-spacing:0!important;
+}
+#tipTopTabs .tip-top-search{
+  flex:0 0 42px!important;
+  width:42px!important;
+  height:46px!important;
+  min-height:46px!important;
+  font-size:29px!important;
+}
+#tipBottomNav #navFriends b{font-size:25px!important}
+@media(max-width:390px){
+  #tipTopTabs{padding-left:7px!important;padding-right:7px!important;gap:6px!important}
+  #tipTopTabs .tip-brand{font-size:17px!important;letter-spacing:-.7px!important}
+  #tipTopTabs .tip-tabs{gap:4px!important}
+  #tipTopTabs .tip-tabs button{font-size:12px!important;padding:10px 3px!important}
+  #tipTopTabs .tip-top-search{flex-basis:36px!important;width:36px!important;height:42px!important}
+}
+
 </style>
 </head>
 <body>
@@ -670,7 +717,7 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
 <div id="tipTopTabs"><span class="tip-brand">TIP<span>NOVA</span></span><div class="tip-tabs"><button onclick="tipTopSelect(this,'LIVE')">LIVE</button><button onclick="tipTopSelect(this,'COMUNIDAD')">Comunidad</button><button onclick="tipTopSelect(this,'SIGUIENDO')">Siguiendo</button><button class="active" onclick="tipTopSelect(this,'PARA TI')">Para ti</button></div><button class="tip-top-search" aria-label="Buscar" onclick="tipOpenSearch()">⌕</button></div>
 <nav id="tipBottomNav">
  <button id="navHome" class="active" onclick="tipGoHome()"><b>⌂</b><span>Inicio</span></button>
- <button id="navFriends" onclick="tipOpenFriends()"><b>♧</b><span>Amigos</span></button>
+ <button id="navFriends" onclick="tipOpenFriends()"><b aria-hidden="true">👥</b><span>Amigos</span></button>
  <button id="navCrear" onclick="tipOpenCreate()"><b>＋</b><span>Crear</span></button>
  <button id="navMessages" onclick="tipOpenMessages()"><b>▤</b><span>Mensajes</span></button>
  <button id="navProfile" onclick="tipSetActiveNav('navProfile');tipOpenAccount()"><b>♙</b><span>Perfil</span></button>
