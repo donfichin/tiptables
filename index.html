@@ -591,6 +591,22 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
  #feed .tip .category,#feed .tip>.muted{margin-right:94px!important}
 }
 
+
+/* Barra superior tipo feed social: categorías y búsqueda */
+#tipTopTabs{height:88px!important;padding:8px 10px!important;gap:7px!important;justify-content:space-between!important;align-items:center!important}
+#tipTopTabs .tip-brand{font-size:20px!important;flex:0 0 auto!important}
+#tipTopTabs .tip-tabs{flex:1 1 auto!important;min-width:0!important;display:flex!important;align-items:center!important;justify-content:space-evenly!important;gap:0!important;overflow-x:auto!important;scrollbar-width:none!important}
+#tipTopTabs .tip-tabs::-webkit-scrollbar{display:none!important}
+#tipTopTabs .tip-tabs button{font-size:13px!important;font-weight:900!important;white-space:nowrap!important;padding:10px 5px!important;min-height:48px!important;letter-spacing:-.2px!important}
+#tipTopTabs .tip-top-search{flex:0 0 42px!important;width:42px!important;height:46px!important;min-height:46px!important;border-radius:15px!important;background:rgba(255,255,255,.14)!important;border:1px solid rgba(255,255,255,.25)!important;color:#fff!important;font-size:30px!important;line-height:1!important;padding:0!important}
+#tipTopTabs .tip-tabs button.active{border-bottom:3px solid #78f0cf!important;color:#fff!important}
+@media(max-width:390px){
+ #tipTopTabs{padding-left:7px!important;padding-right:7px!important}
+ #tipTopTabs .tip-brand{font-size:18px!important}
+ #tipTopTabs .tip-tabs button{font-size:11px!important;padding-left:3px!important;padding-right:3px!important}
+ #tipTopTabs .tip-top-search{flex-basis:38px!important;width:38px!important}
+}
+
 </style>
 </head>
 <body>
@@ -651,7 +667,7 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
  </section>
 </main>
 
-<div id="tipTopTabs"><span class="tip-brand">TIP<span>TOPS</span></span><div class="tip-tabs"><button class="active" onclick="tipToast('Estás viendo los consejos de la comunidad')">Para vos</button><button onclick="tipToast('La sección Siguiendo estará disponible próximamente')">Siguiendo</button></div></div>
+<div id="tipTopTabs"><span class="tip-brand">TIP<span>TOPS</span></span><div class="tip-tabs"><button onclick="tipTopSelect(this,'LIVE')">LIVE</button><button onclick="tipTopSelect(this,'COMUNIDAD')">Comunidad</button><button onclick="tipTopSelect(this,'SIGUIENDO')">Siguiendo</button><button class="active" onclick="tipTopSelect(this,'PARA TI')">Para ti</button></div><button class="tip-top-search" aria-label="Buscar" onclick="tipOpenSearch()">⌕</button></div>
 <nav id="tipBottomNav">
  <button id="navHome" class="active" onclick="tipGoHome()"><b>⌂</b>Inicio</button>
  <button id="navSearch" onclick="tipOpenSearch()"><b>⌕</b>Buscar</button>
@@ -814,6 +830,15 @@ function tipOpenCreate(){tipSetActiveNav("navCrear");
  const crear=document.getElementById("crear");document.getElementById("crearMount").appendChild(crear);
 }
 function tipCloseCreate(){document.getElementById("tipCrearOverlay").classList.remove("open");}
+
+function tipTopSelect(button,section){
+ document.querySelectorAll("#tipTopTabs .tip-tabs button").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+ if(section==="LIVE"){tipToast("LIVE: próximamente vas a poder transmitir en vivo.");return;}
+ if(section==="SIGUIENDO"){tipToast("La sección Siguiendo estará disponible cuando incorporemos perfiles y seguimiento.");return;}
+ if(section==="COMUNIDAD"){tipToast("Estás viendo los consejos de toda la comunidad.");return;}
+ tipToast("Tu selección Para ti está activa.");
+}
 let tipSearchScope="all";
 function tipSetActiveNav(id){document.querySelectorAll("#tipBottomNav button").forEach(b=>b.classList.remove("active"));const el=document.getElementById(id);if(el)el.classList.add("active");}
 function tipGoHome(){document.getElementById("tipSearch").classList.remove("open");document.getElementById("feed").scrollTo({top:0,behavior:"smooth"});tipSetActiveNav("navHome");}
