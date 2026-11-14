@@ -1021,8 +1021,8 @@ function tipOpenAccount(){tipSetActiveNav("navProfile");
  const ov=document.getElementById("tipCuentaOverlay");ov.classList.add("open");
  const cuenta=document.getElementById("cuenta");document.getElementById("cuentaMount").appendChild(cuenta);
 }
-function tipCloseAccount(){document.getElementById("tipCuentaOverlay").classList.remove("open");}
-function tipCloseProfile(){document.getElementById("tipProfileOverlay").classList.remove("open");}
+function tipCloseAccount(){document.getElementById("tipCuentaOverlay").classList.remove("open");tipSetActiveNav("navHome");}
+function tipCloseProfile(){document.getElementById("tipProfileOverlay").classList.remove("open");tipSetActiveNav("navHome");}
 async function tipShowMyPosts(){
  const card=document.getElementById("tipProfileCard");
  card.innerHTML='<h2>Mis publicaciones</h2><p>Cargando tus consejos...</p><button class="secondary" onclick="tipOpenAccount()">Volver al perfil</button>';
@@ -1057,7 +1057,8 @@ function tipTopSelect(button,section){
 }
 let tipSearchScope="all";
 function tipSetActiveNav(id){document.querySelectorAll("#tipBottomNav button").forEach(b=>b.classList.remove("active"));const el=document.getElementById(id);if(el)el.classList.add("active");}
-function tipGoHome(){document.getElementById("tipSearch").classList.remove("open");document.getElementById("feed").scrollTo({top:0,behavior:"smooth"});tipSetActiveNav("navHome");}
+function tipCloseAllPanels(){["tipSearch","tipFriendsOverlay","tipProfileOverlay","tipCuentaOverlay","tipCrearOverlay"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("open");});}
+function tipGoHome(){tipCloseAllPanels();const feed=document.getElementById("feed");if(feed){feed.style.display="";feed.scrollTo({top:0,behavior:"smooth"});}tipSetActiveNav("navHome");}
 let tipCreators=[];
 async function tipOpenFriends(){
  tipSetActiveNav("navFriends");
