@@ -1003,6 +1003,8 @@ async function ingresar(){
   if(error) throw error;
   mostrarEstadoSesion(data.session);
   mensaje("¡Bienvenido a TIPNOVA! Sesión iniciada como "+(data.user.email||email));
+  tipCloseAllPanels();
+  tipSetActiveNav("navHome");
   await cargarTips();
  }catch(e){mensaje("No se pudo iniciar sesión: "+e.message);}
  finally{boton.disabled=false;boton.textContent="Entrar a TIPNOVA";}
