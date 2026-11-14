@@ -1318,6 +1318,7 @@ async function cargarTips(){
  feed.innerHTML=publicaciones.map(t=>{
   const v=conteo[t.id]||{like:0,useful:0,mios:[]};
   const video=t.video_path ? db.storage.from("tip-videos").getPublicUrl(t.video_path).data.publicUrl : "";
+  const esFavorito=obtenerFavoritos().includes(t.id);
   return `<article class="tip">
    <div class="category">${escapar(t.category)}</div>
       <div class="muted">
@@ -1331,7 +1332,7 @@ async function cargarTips(){
    <div class="muted">Publicado el ${new Date(t.created_at).toLocaleDateString("es-AR")}</div>
    <div class="tip-tools">
     <button type="button" onclick="compartirTip('${t.id}','${escapar(t.title).replace(/'/g,"&#39;")}')">↗ Compartir</button>
-    ${video?'<button type="button" onclick="descargarTip(\''+escapar(video)+'\',\''+escapar(t.title).replace(/'/g,"&#39;")+'\')">↓ Guardar video</button>':""}
+    <button type="button" id="fav-${t.id}" data-tip="${t.id}" class="tip-favorite ${esFavorito?"is-saved":""}" aria-pressed="${esFavorito}" onclick="alternarFavorito(this.dataset.tip)">${esFavorito?"🔖 GUARDADO":"♧ GUARDAR EN FAVORITOS"}</button>
    </div>
    <div class="actions">
      <button class="tip-follow" onclick="return tipFollowCreator('${t.user_id}',event)"><span class="tip-follow-symbol">＋</span><span>SEGUIR</span></button>
@@ -1374,14 +1375,26 @@ async function compartirTip(tipId,titulo){
   else prompt("Copiá este enlace para compartir:",url);
  }catch(e){if(e.name!=="AbortError")alert("No se pudo abrir el menú para compartir.");}
 }
-async function descargarTip(url,titulo){
- try{
-  const respuesta=await fetch(url);if(!respuesta.ok)throw new Error("No se pudo descargar el video");
-  const blob=await respuesta.blob(),obj=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=obj;a.download=(titulo||"TIPNOVA").replace(/[^a-z0-9áéíóúñ_-]/gi,"_")+".mp4";
-  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(obj),1500);
- }catch(e){alert("No se pudo guardar el video. Podés abrirlo y usar la opción de descarga del navegador.");}
+function obtenerFavoritos(){
+ if(!usuario)return [];
+ try{return JSON.parse(localStorage.getItem("tipnova_favoritos_"+usuario.id)||"[]");}
+ catch(e){return [];}
 }
+function alternarFavorito(tipId){
+ if(!usuario){tipToast("Iniciá sesión para guardar tus favoritos.");return;}
+ const guardados=obtenerFavoritos();
+ const existe=guardados.includes(tipId);
+ const nuevos=existe?guardados.filter(id=>id!==tipId):[...guardados,tipId];
+ localStorage.setItem("tipnova_favoritos_"+usuario.id,JSON.stringify(nuevos));
+ const boton=document.getElementById("fav-"+tipId);
+ if(boton){
+  boton.classList.toggle("is-saved",!existe);
+  boton.setAttribute("aria-pressed",String(!existe));
+  boton.textContent=existe?"♧ GUARDAR EN FAVORITOS":"🔖 GUARDADO";
+ }
+ tipToast(existe?"Se quitó de tus favoritos.":"Guardado en tus favoritos.");
+}
+
 function cerrarComentarios(tipId){
  const zona=document.getElementById("comentarios-"+tipId);
  const tarjeta=zona?.closest(".tip");
@@ -1474,3 +1487,8 @@ if ("serviceWorker" in navigator) {
 #feed .tip .actions .tip-follow{gap:2px!important}
 #feed .tip .actions .tip-follow .tip-follow-symbol{display:block!important;position:relative!important;top:3px!important;font-size:27px!important;line-height:1!important;font-weight:900!important}
 #feed .tip .actions .tip-follow span:not(.tip-follow-symbol){display:block!important;font-size:13px!important;line-height:1.1!important}
+
+
+/* TIPNOVA v26: guardar favoritos sin descargar archivos */
+#feed .tip .tip-tools .tip-favorite{background:#fff4d8!important;border:1px solid #e8c66d!important;color:#553d08!important}
+#feed .tip .tip-tools .tip-favorite.is-saved{background:#dff7ed!important;border:2px solid #62c5a3!important;color:#075342!important}
