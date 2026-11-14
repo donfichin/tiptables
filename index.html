@@ -807,6 +807,15 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
 }
 
 
+/* TIPNOVA v20: estados de reacción claros */
+#feed .tip .actions button.tip-useful,
+#feed .tip .actions button.tip-like{font-weight:900!important;letter-spacing:.1px!important;transition:transform .15s,box-shadow .15s,background .15s!important}
+#feed .tip .actions button.tip-useful{background:#e8fff7!important;color:#075342!important;border:2px solid #75d9bd!important}
+#feed .tip .actions button.tip-like{background:#fff0f4!important;color:#76223f!important;border:2px solid #f2a9c0!important}
+#feed .tip .actions button.tip-useful.is-selected{background:#087b60!important;color:#fff!important;border:3px solid #c7ffe9!important;box-shadow:0 0 0 4px #087b6070,0 0 18px #72f0c5!important;transform:scale(1.04)!important}
+#feed .tip .actions button.tip-like.is-selected{background:#a62955!important;color:#fff!important;border:3px solid #ffd5e2!important;box-shadow:0 0 0 4px #a6295570,0 0 18px #ff9fbd!important;transform:scale(1.04)!important}
+#feed .tip .actions button.tip-useful:focus-visible,#feed .tip .actions button.tip-like:focus-visible{outline:3px solid #fff!important;outline-offset:3px!important}
+
 /* TIPNOVA v17: corrección de interacción, contraste Me gusta e icono Creadores */
 #tipBottomNav #navFriends b{display:flex!important;align-items:center!important;justify-content:center!important;color:currentColor!important}
 #tipBottomNav #navFriends b svg{display:block!important;stroke:currentColor!important;fill:none!important}
@@ -1003,8 +1012,7 @@ async function ingresar(){
   if(error) throw error;
   mostrarEstadoSesion(data.session);
   mensaje("¡Bienvenido a TIPNOVA! Sesión iniciada como "+(data.user.email||email));
-  tipCloseAllPanels();
-  tipSetActiveNav("navHome");
+  tipGoHome();
   await cargarTips();
  }catch(e){mensaje("No se pudo iniciar sesión: "+e.message);}
  finally{boton.disabled=false;boton.textContent="Entrar a TIPNOVA";}
@@ -1145,6 +1153,7 @@ async function cerrarSesion(){
  const {error}=await db.auth.signOut();
  if(error){mensaje("No se pudo cerrar sesión: "+error.message);return;}
  mostrarEstadoSesion(null);
+ tipGoHome();
  await cargarTips();
 }
 async function publicarTip(){
@@ -1251,8 +1260,8 @@ async function cargarTips(){
    <div class="muted">Publicado el ${new Date(t.created_at).toLocaleDateString("es-AR")}</div>
    <div class="actions">
      <button class="tip-follow" onclick="return tipFollowCreator('${t.user_id}',event)">＋<span>SEGUIR</span></button>
-    <button class="tip-useful ${v.mios.includes("useful")?"green":"light"}" onclick="votar('${t.id}','useful')">✓ ME SIRVIÓ · ${v.useful||0}</button>
-    <button class="tip-like ${v.mios.includes("like")?"green":"light"}" onclick="votar('${t.id}','like')">♡ Me gusta · ${v.like||0}</button>
+    <button class="tip-useful ${v.mios.includes("useful")?"is-selected":" "} " aria-pressed="${v.mios.includes("useful")}" onclick="votar('${t.id}','useful')">${v.mios.includes("useful")?"✓ TE SIRVIÓ":"＋ ME SIRVIÓ"} · ${v.useful||0}</button>
+    <button class="tip-like ${v.mios.includes("like")?"is-selected":" "} " aria-pressed="${v.mios.includes("like")}" onclick="votar('${t.id}','like')">${v.mios.includes("like")?"♥ TE GUSTA":"♡ ME GUSTA"} · ${v.like||0}</button>
     <button class="tip-comment light" onclick="toggleComentarios('${t.id}')">💬 COMENTAR · ${cantComentarios[t.id]||0}</button>
    </div>
    <div id="comentarios-${t.id}"></div>
