@@ -309,7 +309,7 @@ main>section:last-of-type>.row{display:none!important}
 #tipBottomNav{position:fixed;left:0;right:0;bottom:0;height:62px;padding:4px 10px calc(4px + env(safe-area-inset-bottom));display:flex;justify-content:space-around;align-items:center;z-index:50;background:#101b22f2;border-top:1px solid #ffffff20;backdrop-filter:blur(14px)}
 #tipBottomNav button{min-width:54px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;background:transparent;color:#dce6e9;font-size:10px;border-radius:12px}
 #tipBottomNav button b{font-size:21px;line-height:1}
-#tipBottomNav button.active{color:#b8f0dc}
+#tipBottomNav button.active{color:#b8f0dc;background:#b8f0dc1c;box-shadow:inset 0 0 0 1px #b8f0dc80;font-weight:900}#tipBottomNav button.active span{font-weight:900}#tipBottomNav button.active b{transform:scale(1.08)}
 #tipBottomNav #navCrear{width:48px;height:42px;min-width:48px;border-radius:13px;background:#b8f0dc;color:#123c37;font-size:25px;padding:0}
 #tipBottomNav #navCrear b{font-size:27px}
 #tipCuentaOverlay{display:none;position:fixed;inset:0;z-index:100;background:#071116df;align-items:center;justify-content:center;padding:20px}
@@ -987,6 +987,7 @@ const db = window.supabase.createClient(URL_SUPABASE, CLAVE_PUBLICA);
 let usuario = null;
 let publicaciones = [];
 let archivoVideo = null;
+let cargaTipsId = 0;
 
 function seleccionarVideo(campo){
  const archivo=campo.files[0];
@@ -1294,24 +1295,30 @@ async function publicarTip(){
  }
 }
 async function cargarTips(){
+ const cargaActual=++cargaTipsId;
+ const usuarioActual=usuario;
  const feed=document.getElementById("feed");
  feed.innerHTML='<div class="panel">Cargando publicaciones...</div>';
  const {data,error}=await db.from("tips").select("*").order("created_at",{ascending:false});
+ if(cargaActual!==cargaTipsId)return;
  if(error){feed.innerHTML='<div class="panel">No se pudieron cargar los tips: '+escapar(error.message)+'</div>';return;}
  publicaciones=data||[];
  if(!publicaciones.length){feed.innerHTML='<div class="panel">Todavía no hay publicaciones. ¡Sé el primero en compartir un TIP!</div>';return;}
  const ids=[...new Set(publicaciones.map(t=>t.user_id).filter(Boolean))];
  const {data:perfiles}=await db.from("profiles")
   .select("user_id,username,display_name").in("user_id",ids);
+ if(cargaActual!==cargaTipsId)return;
  const autores={};
  (perfiles||[]).forEach(p=>autores[p.user_id]=p);
  const {data:votos}=await db.from("tip_votes").select("tip_id,user_id,vote_type");
+ if(cargaActual!==cargaTipsId)return;
  const {data:comentarios}=await db.from("tip_comments").select("tip_id");
+ if(cargaActual!==cargaTipsId)return;
  const conteo={};
  (votos||[]).forEach(v=>{
   conteo[v.tip_id]=conteo[v.tip_id]||{like:0,useful:0,mios:[]};
   conteo[v.tip_id][v.vote_type]=(conteo[v.tip_id][v.vote_type]||0)+1;
-  if(usuario && v.user_id===usuario.id) conteo[v.tip_id].mios.push(v.vote_type);
+  if(usuarioActual && v.user_id===usuarioActual.id) conteo[v.tip_id].mios.push(v.vote_type);
  });
  const cantComentarios={};
  (comentarios||[]).forEach(c=>cantComentarios[c.tip_id]=(cantComentarios[c.tip_id]||0)+1);
@@ -1492,3 +1499,6 @@ if ("serviceWorker" in navigator) {
 /* TIPNOVA v26: guardar favoritos sin descargar archivos */
 #feed .tip .tip-tools .tip-favorite{background:#fff4d8!important;border:1px solid #e8c66d!important;color:#553d08!important}
 #feed .tip .tip-tools .tip-favorite.is-saved{background:#dff7ed!important;border:2px solid #62c5a3!important;color:#075342!important}
+
+
+/* TIPNOVA v27: recargas del feed sin carreras y navegación activa más visible */
