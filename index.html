@@ -806,6 +806,14 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
  #feed .tip h3,#feed .tip p,#feed .tip .category,#feed .tip>.muted{margin-right:102px!important}
 }
 
+
+/* TIPNOVA v17: corrección de interacción, contraste Me gusta e icono Creadores */
+#tipBottomNav #navFriends b{display:flex!important;align-items:center!important;justify-content:center!important;color:currentColor!important}
+#tipBottomNav #navFriends b svg{display:block!important;stroke:currentColor!important;fill:none!important}
+#feed .tip .actions .tip-like,#feed .tip .actions .tip-like.green,#feed .tip .actions .tip-like.light{background:#ffe4ec!important;background-image:none!important;color:#681d38!important;border:2px solid #ffb7cb!important;text-shadow:none!important}
+#feed .tip .actions .tip-like:before{color:#a62d56!important}
+#feed .tip .actions .tip-follow{cursor:pointer!important;touch-action:manipulation!important}
+#feed .tip .actions button{touch-action:manipulation!important}
 </style>
 </head>
 <body>
@@ -870,7 +878,7 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
 <div id="tipTopTabs"><span class="tip-brand">TIP<span>NOVA</span></span><div class="tip-tabs"><button onclick="tipTopSelect(this,'LIVE')">LIVE</button><button onclick="tipTopSelect(this,'COMUNIDAD')">Comunidad</button><button onclick="tipTopSelect(this,'SIGUIENDO')">Siguiendo</button><button class="active" onclick="tipTopSelect(this,'PARA TI')">Para ti</button></div><button class="tip-top-search" aria-label="Buscar" onclick="tipOpenSearch()">⌕</button></div>
 <nav id="tipBottomNav">
  <button id="navHome" class="active" onclick="tipGoHome()"><b>⌂</b><span>Inicio</span></button>
- <button id="navFriends" onclick="tipOpenFriends()"><b aria-hidden="true">👥</b><span>Creadores</span></button>
+ <button id="navFriends" onclick="tipOpenFriends()"><b aria-hidden="true"><svg viewBox="0 0 28 28" width="27" height="27" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="3.2"/><path d="M3.8 21v-1.3a6.2 6.2 0 0 1 12.4 0V21z"/><circle cx="20" cy="9" r="2.5"/><path d="M18.4 15.2a5 5 0 0 1 5.8 4.9V21h-5"/></svg></b><span>Creadores</span></button>
  <button id="navCrear" onclick="tipOpenCreate()"><b>＋</b><span>Crear</span></button>
  <button id="navMessages" onclick="tipOpenMessages()"><b>▤</b><span>Mensajes</span></button>
  <button id="navProfile" onclick="tipSetActiveNav('navProfile');tipOpenAccount()"><b>♙</b><span>Perfil</span></button>
@@ -1090,9 +1098,11 @@ function tipFilterCreators(){
 }
 function tipCloseFriends(){document.getElementById("tipFriendsOverlay").classList.remove("open");tipSetActiveNav("navHome");}
 
-function tipFollowCreator(userId){
- if(!usuario){tipToast("Iniciá sesión para poder seguir creadores.");tipOpenAccount();return;}
- tipToast("El seguimiento todavía no está habilitado. Podés visitar el perfil del creador.");
+function tipFollowCreator(userId,event){
+ if(event){event.preventDefault();event.stopPropagation();}
+ if(!usuario){tipToast("Para seguir creadores, primero iniciá sesión. El video sigue en pantalla.");return false;}
+ tipToast("El seguimiento todavía está en preparación. No se modificó tu muro.");
+ return false;
 }
 function tipOpenMessages(){tipSetActiveNav("navMessages");tipToast("Mensajes: estamos preparando el chat privado.");}
 function tipOpenSearch(){tipSetActiveNav("navSearch");document.getElementById("tipSearch").classList.add("open");document.getElementById("tipSearchInput").focus();tipFilterSearch();}
@@ -1221,7 +1231,7 @@ async function cargarTips(){
    ${video?`<video autoplay muted loop playsinline preload="metadata" onclick="this.muted=!this.muted" src="${escapar(video)}"></video>`:""}
    <div class="muted">Publicado el ${new Date(t.created_at).toLocaleDateString("es-AR")}</div>
    <div class="actions">
-     <button class="tip-follow" onclick="tipFollowCreator('${t.user_id}')">＋<span>SEGUIR</span></button>
+     <button class="tip-follow" onclick="return tipFollowCreator('${t.user_id}',event)">＋<span>SEGUIR</span></button>
     <button class="tip-useful ${v.mios.includes("useful")?"green":"light"}" onclick="votar('${t.id}','useful')">✓ ME SIRVIÓ · ${v.useful||0}</button>
     <button class="tip-like ${v.mios.includes("like")?"green":"light"}" onclick="votar('${t.id}','like')">♡ Me gusta · ${v.like||0}</button>
     <button class="tip-comment light" onclick="toggleComentarios('${t.id}')">💬 COMENTAR · ${cantComentarios[t.id]||0}</button>
