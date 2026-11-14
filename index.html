@@ -822,7 +822,7 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
 <button class="green" onclick="toggleCrear()">＋ Publicar TIP</button>
 </header>
 <main>
- <div id="tipCuentaOverlay" onclick="if(event.target===this)this.classList.remove('open')"><section id="cuentaMount"></section></div>
+ <div id="tipCuentaOverlay" onclick="if(event.target===this)tipCloseAccount()"><section id="cuentaMount"></section></div>
  <div id="tipCrearOverlay" onclick="if(event.target===this)tipCloseCreate()"><section id="crearMount"></section></div>
  <section class="panel hidden" id="sesionActiva"><div class="session-pill">● SESIÓN ACTIVA</div><strong id="sesionEmail"></strong><p>Ya estás dentro de TIPNOVA. ¡A descubrir y compartir consejos!</p><button class="light" onclick="cerrarSesion()">Cerrar sesión</button></section>
  <section class="panel" id="cuenta">
@@ -1023,8 +1023,8 @@ function tipOpenAccount(){tipSetActiveNav("navProfile");
  const ov=document.getElementById("tipCuentaOverlay");ov.classList.add("open");
  const cuenta=document.getElementById("cuenta");document.getElementById("cuentaMount").appendChild(cuenta);
 }
-function tipCloseAccount(){document.getElementById("tipCuentaOverlay").classList.remove("open");tipSetActiveNav("navHome");}
-function tipCloseProfile(){document.getElementById("tipProfileOverlay").classList.remove("open");tipSetActiveNav("navHome");}
+function tipCloseAccount(){tipGoHome();}
+function tipCloseProfile(){tipGoHome();}
 async function tipShowMyPosts(){
  const card=document.getElementById("tipProfileCard");
  card.innerHTML='<h2>Mis publicaciones</h2><p>Cargando tus consejos...</p><button class="secondary" onclick="tipOpenAccount()">Volver al perfil</button>';
