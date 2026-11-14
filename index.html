@@ -1283,13 +1283,7 @@ async function cargarTips(){
  const autores={};
  (perfiles||[]).forEach(p=>autores[p.user_id]=p);
  const {data:votos}=await db.from("tip_votes").select("tip_id,user_id,vote_type");
- const {data:comentarios}=await db.from("tip_comments").select("tip_id,user_id,body,created_at");
- const autoresComentarios={};
- const idsComentarios=[...new Set((comentarios||[]).map(c=>c.user_id).filter(Boolean))];
- if(idsComentarios.length){
-  const {data:perfilesComentarios}=await db.from("profiles").select("user_id,username,display_name").in("user_id",idsComentarios);
-  (perfilesComentarios||[]).forEach(p=>autoresComentarios[p.user_id]=p);
- }
+ const {data:comentarios}=await db.from("tip_comments").select("tip_id");
  const conteo={};
  (votos||[]).forEach(v=>{
   conteo[v.tip_id]=conteo[v.tip_id]||{like:0,useful:0,mios:[]};
@@ -1364,7 +1358,7 @@ async function verComentarios(tipId, mostrarFormulario=true){
  if(!zona)return;
  zona.classList.add("open");
  zona.innerHTML='<div class="comment-sheet-head"><div class="comment-grabber"></div><div class="comment-heading"><div><span class="comment-brand-dot"></span><strong>La conversación</strong></div><span class="comment-count">Cargando...</span></div><button type="button" class="comment-close" aria-label="Cerrar comentarios" onclick="cerrarComentarios(\''+tipId+'\')">✕</button></div><div class="comment-list"><div class="comment-empty">Buscando a la comunidad...</div></div>';
- const {data,error}=await db.from("tip_comments").select("id,tip_id,user_id,body,created_at").eq("tip_id",tipId).order("created_at",{ascending:true});
+ const {data,error}=await db.from("tip_comments").select("tip_id,user_id,body,created_at").eq("tip_id",tipId).order("created_at",{ascending:true});
  if(error){zona.querySelector(".comment-list").innerHTML='<div class="comment-empty">No pudimos cargar los comentarios: '+escapar(error.message)+'</div>';return;}
  const comentarios=data||[];
  zona.querySelector(".comment-count").textContent=comentarios.length+" "+(comentarios.length===1?"comentario":"comentarios");
