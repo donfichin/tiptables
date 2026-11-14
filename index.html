@@ -1334,7 +1334,7 @@ async function cargarTips(){
     ${video?'<button type="button" onclick="descargarTip(\''+escapar(video)+'\',\''+escapar(t.title).replace(/'/g,"&#39;")+'\')">↓ Guardar video</button>':""}
    </div>
    <div class="actions">
-     <button class="tip-follow" onclick="return tipFollowCreator('${t.user_id}',event)">＋<span>SEGUIR</span></button>
+     <button class="tip-follow" onclick="return tipFollowCreator('${t.user_id}',event)"><span class="tip-follow-symbol">＋</span><span>SEGUIR</span></button>
     <button class="tip-useful ${v.mios.includes("useful")?"is-selected":" "} " aria-pressed="${v.mios.includes("useful")}" onclick="votar('${t.id}','useful')">${v.mios.includes("useful")?"✓ TE SIRVIÓ":"＋ ME SIRVIÓ"} · ${v.useful||0}</button>
     <button class="tip-like ${v.mios.includes("like")?"is-selected":" "} " aria-pressed="${v.mios.includes("like")}" onclick="votar('${t.id}','like')">${v.mios.includes("like")?"♥ TE GUSTA":"♡ ME GUSTA"} · ${v.like||0}</button>
     <button class="tip-comment light" onclick="toggleComentarios('${t.id}')">💬 COMENTAR · ${cantComentarios[t.id]||0}</button>
@@ -1468,3 +1468,9 @@ if ("serviceWorker" in navigator) {
 </script>
 </body>
 </html>
+
+
+/* TIPNOVA v25: centrar verticalmente el símbolo del botón Seguir */
+#feed .tip .actions .tip-follow{gap:2px!important}
+#feed .tip .actions .tip-follow .tip-follow-symbol{display:block!important;position:relative!important;top:3px!important;font-size:27px!important;line-height:1!important;font-weight:900!important}
+#feed .tip .actions .tip-follow span:not(.tip-follow-symbol){display:block!important;font-size:13px!important;line-height:1.1!important}
