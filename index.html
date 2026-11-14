@@ -808,6 +808,39 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
 
 
 
+
+/* TIPNOVA v22 — identidad visual y fichas completas de comentarios */
+#feed .tip [id^="comentarios-"].open{background:#f5fbfa!important;color:#173b46!important;border:1px solid #a9d8cf!important;box-shadow:0 -14px 42px #071f2b80!important;padding:0!important;gap:0!important}
+#feed .tip .comment-sheet-head{position:relative!important;display:grid!important;grid-template-columns:1fr 44px!important;grid-template-rows:16px auto!important;align-items:center!important;gap:5px!important;padding:8px 16px 13px!important;background:linear-gradient(115deg,#143e4b,#176d70 60%,#4a8d75)!important;color:#fff!important;border:0!important;border-radius:23px 23px 0 0!important}
+#feed .tip .comment-grabber{grid-column:1/3!important;justify-self:center!important;width:42px!important;height:4px!important;border-radius:9px!important;background:#c3e5db!important;opacity:.9!important}
+#feed .tip .comment-heading{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important}
+#feed .tip .comment-heading>div{display:flex!important;align-items:center!important;gap:9px!important}
+#feed .tip .comment-heading strong{font-size:18px!important;font-weight:950!important;letter-spacing:-.3px!important;color:white!important}
+#feed .tip .comment-brand-dot{width:10px!important;height:10px!important;border-radius:50%!important;background:#c7f36b!important;box-shadow:0 0 0 4px #c7f36b30!important}
+#feed .tip .comment-count{font-size:12px!important;font-weight:800!important;color:#d8f1e9!important;background:#ffffff20!important;padding:5px 9px!important;border-radius:20px!important}
+#feed .tip .comment-sheet-head .comment-close{grid-column:2!important;grid-row:2!important;width:40px!important;height:40px!important;min-height:40px!important;border:1px solid #ffffff55!important;border-radius:50%!important;background:#ffffff20!important;color:#fff!important;font-size:20px!important}
+#feed .tip .comment-list{padding:10px 14px 16px!important}
+#feed .tip .tip-comment-row{display:grid!important;grid-template-columns:42px minmax(0,1fr) 22px!important;gap:10px!important;align-items:start!important;padding:12px 2px!important;border-bottom:1px solid #e1eeeb!important}
+#feed .tip .tip-comment-avatar,#feed .tip .comment-compose-avatar{display:flex!important;align-items:center!important;justify-content:center!important;width:40px!important;height:40px!important;min-height:40px!important;border-radius:50%!important;background:linear-gradient(145deg,#d4f6e7,#9fd8ca)!important;border:2px solid #fff!important;box-shadow:0 0 0 1px #a9d8cf!important;color:#14534e!important;font-size:17px!important;font-weight:1000!important;padding:0!important}
+#feed .tip .tip-comment-content{min-width:0!important}
+#feed .tip .tip-comment-userline{display:flex!important;align-items:baseline!important;flex-wrap:wrap!important;gap:6px!important;margin:0 0 5px!important}
+#feed .tip .tip-comment-user{display:inline!important;width:auto!important;min-height:0!important;padding:0!important;margin:0!important;background:transparent!important;border:0!important;color:#173f49!important;font-size:14px!important;font-weight:950!important;text-align:left!important}
+#feed .tip .tip-comment-handle{font-size:11px!important;color:#77918f!important;font-weight:650!important}
+#feed .tip .tip-comment-body{margin:0 0 7px!important;color:#203d46!important;font-size:15px!important;line-height:1.45!important;overflow-wrap:anywhere!important;white-space:pre-wrap!important}
+#feed .tip .tip-comment-meta{display:flex!important;align-items:center!important;gap:7px!important;color:#829694!important;font-size:11px!important;font-weight:650!important}
+#feed .tip .tip-comment-dot{color:#b0c6c1!important}
+#feed .tip .tip-comment-mark{color:#9bc9b9!important;font-size:15px!important;padding-top:4px!important}
+#feed .tip .comment-empty{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:9px!important;min-height:150px!important;text-align:center!important;color:#597b79!important}
+#feed .tip .comment-empty>span{font-size:28px!important;color:#3b9d86!important}
+#feed .tip .comment-empty strong{font-size:16px!important;color:#214c50!important}
+#feed .tip .comment-empty small{font-size:13px!important;color:#77918f!important}
+#feed .tip .comment-compose{display:grid!important;grid-template-columns:38px minmax(0,1fr) 46px!important;align-items:center!important;gap:9px!important;padding:12px 14px calc(12px + env(safe-area-inset-bottom))!important;background:#fff!important;border-top:1px solid #dcebe7!important}
+#feed .tip .comment-compose-avatar{width:34px!important;height:34px!important;min-height:34px!important;font-size:14px!important}
+#feed .tip .comment-compose textarea{width:100%!important;min-height:44px!important;max-height:100px!important;resize:none!important;margin:0!important;padding:11px 13px!important;border:1px solid #d2e5df!important;border-radius:22px!important;background:#f3f9f7!important;color:#173b46!important;font-size:14px!important;line-height:1.35!important}
+#feed .tip .comment-compose>button{width:44px!important;height:44px!important;min-height:44px!important;border-radius:50%!important;background:#c7f36b!important;color:#173b46!important;font-size:21px!important;font-weight:1000!important;box-shadow:0 3px 0 #9bc64e!important}
+#feed .tip .comment-compose-again{display:block!important}
+#feed .tip .comment-compose .comment-again{width:100%!important;min-height:48px!important;border-radius:18px!important;background:#c7f36b!important;color:#173b46!important;font-weight:900!important}
+
 /* TIPNOVA v21: comentarios en hoja inferior estilo TikTok */
 #feed .tip.comments-active video{height:34svh!important;max-height:34svh!important;width:auto!important;max-width:58vw!important;aspect-ratio:9/16!important;object-fit:contain!important;margin:5px auto 8px!important;border-radius:16px!important;transform:translateY(-8px)!important;transition:height .25s ease,margin .25s ease,transform .25s ease!important}
 #feed .tip [id^="comentarios-"]{display:none!important}
@@ -1250,7 +1283,13 @@ async function cargarTips(){
  const autores={};
  (perfiles||[]).forEach(p=>autores[p.user_id]=p);
  const {data:votos}=await db.from("tip_votes").select("tip_id,user_id,vote_type");
- const {data:comentarios}=await db.from("tip_comments").select("tip_id");
+ const {data:comentarios}=await db.from("tip_comments").select("tip_id,user_id,body,created_at");
+ const autoresComentarios={};
+ const idsComentarios=[...new Set((comentarios||[]).map(c=>c.user_id).filter(Boolean))];
+ if(idsComentarios.length){
+  const {data:perfilesComentarios}=await db.from("profiles").select("user_id,username,display_name").in("user_id",idsComentarios);
+  (perfilesComentarios||[]).forEach(p=>autoresComentarios[p.user_id]=p);
+ }
  const conteo={};
  (votos||[]).forEach(v=>{
   conteo[v.tip_id]=conteo[v.tip_id]||{like:0,useful:0,mios:[]};
@@ -1311,18 +1350,53 @@ function toggleComentarios(tipId){
  zona.closest(".tip")?.classList.add("comments-active");
  verComentarios(tipId);
 }
+function tiempoComentario(fecha){
+ const segundos=Math.max(0,Math.floor((Date.now()-new Date(fecha).getTime())/1000));
+ if(!fecha||!Number.isFinite(segundos))return "recién";
+ if(segundos<60)return "ahora";
+ if(segundos<3600)return "hace "+Math.floor(segundos/60)+" min";
+ if(segundos<86400)return "hace "+Math.floor(segundos/3600)+" h";
+ if(segundos<604800)return "hace "+Math.floor(segundos/86400)+" d";
+ return new Date(fecha).toLocaleDateString("es-AR",{day:"numeric",month:"short"});
+}
 async function verComentarios(tipId, mostrarFormulario=true){
  const zona=document.getElementById("comentarios-"+tipId);
  if(!zona)return;
  zona.classList.add("open");
- zona.innerHTML='<div class="comment-sheet-head"><strong>Comentarios</strong><button type="button" class="comment-close" aria-label="Cerrar comentarios" onclick="cerrarComentarios(\''+tipId+'\')">✕</button></div><div class="comment-list"><div class="comment-empty">Cargando comentarios...</div></div>';
- const {data,error}=await db.from("tip_comments").select("*").eq("tip_id",tipId).order("created_at",{ascending:true});
- if(error){zona.querySelector(".comment-list").innerHTML='<div class="comment-empty">No se pudieron cargar: '+escapar(error.message)+'</div>';return;}
- const lista=(data||[]).map(c=>'<div class="comment">'+escapar(c.body)+'</div>').join("");
- zona.querySelector(".comment-list").innerHTML=lista||'<div class="comment-empty">Todavía no hay comentarios. ¡Sé el primero!</div>';
+ zona.innerHTML='<div class="comment-sheet-head"><div class="comment-grabber"></div><div class="comment-heading"><div><span class="comment-brand-dot"></span><strong>La conversación</strong></div><span class="comment-count">Cargando...</span></div><button type="button" class="comment-close" aria-label="Cerrar comentarios" onclick="cerrarComentarios(\''+tipId+'\')">✕</button></div><div class="comment-list"><div class="comment-empty">Buscando a la comunidad...</div></div>';
+ const {data,error}=await db.from("tip_comments").select("id,tip_id,user_id,body,created_at").eq("tip_id",tipId).order("created_at",{ascending:true});
+ if(error){zona.querySelector(".comment-list").innerHTML='<div class="comment-empty">No pudimos cargar los comentarios: '+escapar(error.message)+'</div>';return;}
+ const comentarios=data||[];
+ zona.querySelector(".comment-count").textContent=comentarios.length+" "+(comentarios.length===1?"comentario":"comentarios");
+ const ids=[...new Set(comentarios.map(c=>c.user_id).filter(Boolean))];
+ let autores={};
+ if(ids.length){
+  const {data:perfiles,error:perfilError}=await db.from("profiles").select("user_id,username,display_name").in("user_id",ids);
+  if(!perfilError)(perfiles||[]).forEach(p=>autores[p.user_id]=p);
+ }
+ const lista=comentarios.map(c=>{
+  const p=autores[c.user_id]||{};
+  const nombre=p.display_name||p.username||"Miembro de TIPNOVA";
+  const handle=p.username?"@"+p.username:"Comunidad TIPNOVA";
+  const inicial=escapar((nombre.trim()[0]||"T").toUpperCase());
+  return '<article class="tip-comment-row"><button class="tip-comment-avatar" type="button" aria-label="Ver perfil de '+escapar(nombre)+'" onclick="verPerfilPublico(\''+c.user_id+'\')">'+inicial+'</button><div class="tip-comment-content"><div class="tip-comment-userline"><button type="button" class="tip-comment-user" onclick="verPerfilPublico(\''+c.user_id+'\')">'+escapar(nombre)+'</button><span class="tip-comment-handle">'+escapar(handle)+'</span></div><p class="tip-comment-body">'+escapar(c.body)+'</p><div class="tip-comment-meta"><span>'+tiempoComentario(c.created_at)+'</span><span class="tip-comment-dot">·</span><span>'+new Date(c.created_at).toLocaleDateString("es-AR")+'</span></div></div><span class="tip-comment-mark" aria-hidden="true">✦</span></article>';
+ }).join("");
+ zona.querySelector(".comment-list").innerHTML=lista||'<div class="comment-empty"><span>✦</span><strong>Acá empieza la conversación</strong><small>Compartí una idea, hacé una pregunta o dejá tu aporte.</small></div>';
  zona.insertAdjacentHTML("beforeend",mostrarFormulario
- ? '<div class="comment-compose"><textarea id="comentario-'+tipId+'" placeholder="Escribí un comentario..."></textarea><button type="button" onclick="comentar(\''+tipId+'\')">Enviar comentario</button></div>'
- : '<div class="comment-compose"><button type="button" class="comment-again" onclick="verComentarios(\''+tipId+'\',true)">＋ Agregar otro comentario</button></div>');
+ ? '<div class="comment-compose"><div class="comment-compose-avatar">'+(usuario?escapar((usuario.email||"T")[0].toUpperCase()):"T")+'</div><textarea id="comentario-'+tipId+'" maxlength="500" placeholder="Sumate a la conversación..."></textarea><button type="button" aria-label="Enviar comentario" onclick="comentar(\''+tipId+'\')">➤</button></div>'
+ : '<div class="comment-compose comment-compose-again"><button type="button" class="comment-again" onclick="verComentarios(\''+tipId+'\',true)">＋ Escribir otro comentario</button></div>');
+}
+async function comentar(tipId){
+ if(!usuario){alert("Iniciá sesión para comentar.");return;}
+ const campo=document.getElementById("comentario-"+tipId);
+ if(!campo)return;
+ const body=campo.value.trim();
+ if(!body){campo.focus();return;}
+ const boton=campo.parentElement.querySelector("button");
+ boton.disabled=true;boton.textContent="…";
+ const {error}=await db.from("tip_comments").insert({tip_id:tipId,user_id:usuario.id,body});
+ if(error){alert("No se pudo enviar: "+error.message);boton.disabled=false;boton.textContent="➤";return;}
+ await verComentarios(tipId,false);
 }
 db.auth.onAuthStateChange((event,session)=>{
  mostrarEstadoSesion(session);
