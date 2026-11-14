@@ -807,6 +807,20 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
 }
 
 
+
+/* TIPNOVA v21: comentarios en hoja inferior estilo TikTok */
+#feed .tip.comments-active video{height:34svh!important;max-height:34svh!important;width:auto!important;max-width:58vw!important;aspect-ratio:9/16!important;object-fit:contain!important;margin:5px auto 8px!important;border-radius:16px!important;transform:translateY(-8px)!important;transition:height .25s ease,margin .25s ease,transform .25s ease!important}
+#feed .tip [id^="comentarios-"]{display:none!important}
+#feed .tip [id^="comentarios-"].open{display:flex!important;position:fixed!important;z-index:120!important;left:0!important;right:0!important;bottom:calc(68px + env(safe-area-inset-bottom))!important;height:54dvh!important;max-height:54dvh!important;flex-direction:column!important;gap:10px!important;overflow:hidden!important;margin:0!important;padding:14px 16px calc(12px + env(safe-area-inset-bottom))!important;background:#f8fcfd!important;color:#102f3a!important;border:1px solid #b8d2da!important;border-radius:24px 24px 0 0!important;box-shadow:0 -12px 35px #0007!important}
+#feed .tip .comment-sheet-head{display:flex!important;align-items:center!important;justify-content:space-between!important;flex:0 0 auto!important;padding:0 2px 9px!important;border-bottom:1px solid #d6e2e6!important;font-size:19px!important;color:#102f3a!important}
+#feed .tip .comment-sheet-head .comment-close{display:flex!important;align-items:center!important;justify-content:center!important;width:42px!important;height:42px!important;min-height:42px!important;border-radius:50%!important;background:#e3edf0!important;color:#183b46!important;font-size:22px!important;font-weight:900!important}
+#feed .tip .comment-list{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;padding:2px 2px 8px!important}
+#feed .tip .comment-compose{flex:0 0 auto!important;padding-top:8px!important;border-top:1px solid #d6e2e6!important}
+#feed .tip [id^="comentarios-"] .comment{font-size:16px!important;line-height:1.4!important;background:#fff!important;color:#173944!important;border:1px solid #dce7ea!important;border-radius:14px!important;padding:12px!important;margin:7px 0!important;overflow-wrap:anywhere!important}
+#feed .tip [id^="comentarios-"] textarea{width:100%!important;min-height:52px!important;max-height:90px!important;margin:0 0 7px!important;padding:12px!important;background:#fff!important;color:#102f3a!important;border:1px solid #b8cbd1!important;border-radius:14px!important;font-size:16px!important}
+#feed .tip [id^="comentarios-"] .comment-compose button{width:100%!important;min-height:48px!important;border-radius:16px!important;background:#075b50!important;color:#fff!important;font-size:16px!important;font-weight:900!important}
+@media(max-width:699px){#feed .tip.comments-active .actions{opacity:.25!important;pointer-events:none!important}}
+
 /* TIPNOVA v20: estados de reacción claros */
 #feed .tip .actions button.tip-useful,
 #feed .tip .actions button.tip-like{font-weight:900!important;letter-spacing:.1px!important;transition:transform .15s,box-shadow .15s,background .15s!important}
@@ -1281,36 +1295,33 @@ async function votar(tipId,tipo){
  }
  await cargarTips();
 }
+function cerrarComentarios(tipId){
+ const zona=document.getElementById("comentarios-"+tipId);
+ const tarjeta=zona?.closest(".tip");
+ if(zona)zona.classList.remove("open");
+ if(tarjeta)tarjeta.classList.remove("comments-active");
+}
 function toggleComentarios(tipId){
  const zona=document.getElementById("comentarios-"+tipId);
  if(!zona)return;
- if(zona.classList.contains("open")){zona.classList.remove("open");return;}
+ if(zona.classList.contains("open")){cerrarComentarios(tipId);return;}
+ document.querySelectorAll("#feed .tip.comments-active").forEach(t=>t.classList.remove("comments-active"));
+ document.querySelectorAll("#feed [id^='comentarios-'].open").forEach(z=>z.classList.remove("open"));
+ zona.closest(".tip")?.classList.add("comments-active");
  verComentarios(tipId);
 }
 async function verComentarios(tipId, mostrarFormulario=true){
  const zona=document.getElementById("comentarios-"+tipId);
  if(!zona)return;
  zona.classList.add("open");
- zona.innerHTML='<div class="comment-empty">Cargando comentarios...</div>';
+ zona.innerHTML='<div class="comment-sheet-head"><strong>Comentarios</strong><button type="button" class="comment-close" aria-label="Cerrar comentarios" onclick="cerrarComentarios(\''+tipId+'\')">✕</button></div><div class="comment-list"><div class="comment-empty">Cargando comentarios...</div></div>';
  const {data,error}=await db.from("tip_comments").select("*").eq("tip_id",tipId).order("created_at",{ascending:true});
- if(error){zona.innerHTML='<div class="comment-empty">No se pudieron cargar: '+escapar(error.message)+'</div>';return;}
+ if(error){zona.querySelector(".comment-list").innerHTML='<div class="comment-empty">No se pudieron cargar: '+escapar(error.message)+'</div>';return;}
  const lista=(data||[]).map(c=>'<div class="comment">'+escapar(c.body)+'</div>').join("");
- zona.innerHTML=(lista||'<div class="comment-empty">Todavía no hay comentarios. ¡Sé el primero!</div>')+
- (mostrarFormulario
- ? '<textarea id="comentario-'+tipId+'" placeholder="Escribí un comentario..."></textarea><button type="button" onclick="comentar(\''+tipId+'\')">Enviar comentario</button>'
- : '<button type="button" class="comment-again" onclick="verComentarios(\''+tipId+'\',true)">＋ Agregar otro comentario</button>');
-}
-async function comentar(tipId){
- if(!usuario){alert("Iniciá sesión para comentar.");return;}
- const campo=document.getElementById("comentario-"+tipId);
- if(!campo)return;
- const body=campo.value.trim();
- if(!body){campo.focus();return;}
- const boton=campo.nextElementSibling;
- boton.disabled=true;boton.textContent="Enviando...";
- const {error}=await db.from("tip_comments").insert({tip_id:tipId,user_id:usuario.id,body});
- if(error){alert("No se pudo enviar: "+error.message);boton.disabled=false;boton.textContent="Enviar comentario";return;}
- await verComentarios(tipId,false);
+ zona.querySelector(".comment-list").innerHTML=lista||'<div class="comment-empty">Todavía no hay comentarios. ¡Sé el primero!</div>';
+ zona.insertAdjacentHTML("beforeend",mostrarFormulario
+ ? '<div class="comment-compose"><textarea id="comentario-'+tipId+'" placeholder="Escribí un comentario..."></textarea><button type="button" onclick="comentar(\''+tipId+'\')">Enviar comentario</button></div>'
+ : '<div class="comment-compose"><button type="button" class="comment-again" onclick="verComentarios(\''+tipId+'\',true)">＋ Agregar otro comentario</button></div>');
 }
 db.auth.onAuthStateChange((event,session)=>{
  mostrarEstadoSesion(session);
