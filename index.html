@@ -654,6 +654,29 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
   #tipTopTabs .tip-top-search{flex-basis:36px!important;width:36px!important;height:42px!important}
 }
 
+
+/* Descubrir creadores: usa perfiles y publicaciones ya existentes, sin tocar Supabase */
+.tip-friends-overlay{display:none;position:fixed;inset:0;z-index:115;background:rgba(3,10,16,.88);align-items:flex-end;justify-content:center;padding:10px}
+.tip-friends-overlay.open{display:flex}
+.tip-friends-panel{width:min(100%,620px);max-height:88dvh;overflow-y:auto;background:#f5fafb;color:#18323b;border-radius:25px 25px 18px 18px;padding:22px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 12px 50px #0008}
+.tip-friends-heading{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.tip-friends-heading h2{font-size:25px;margin:2px 0 5px}
+.tip-friends-heading p{margin:0;color:#60757d;font-size:14px}
+.tip-friends-eyebrow{font-size:11px!important;font-weight:900;letter-spacing:1.3px;color:#07836d!important}
+.tip-friends-close{width:42px;height:42px;flex:0 0 42px;border-radius:50%;background:#e4edef;color:#18323b;font-size:28px;line-height:1}
+.tip-friends-search{width:100%;box-sizing:border-box;margin:19px 0 12px;padding:14px 16px;border:1px solid #cfdbde;border-radius:14px;background:white;color:#18323b;font-size:16px}
+.tip-friends-list{display:grid;gap:9px}
+.tip-creator-card{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:1px solid #e0e9eb;border-radius:16px;background:white;color:#18323b;text-align:left}
+.tip-creator-avatar{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:50%;background:#d9f4eb;color:#087b68;font-size:21px;font-weight:900}
+.tip-creator-info{display:grid;gap:4px;min-width:0;flex:1}
+.tip-creator-info strong{font-size:15px;overflow-wrap:anywhere}
+.tip-creator-info small{font-size:12px;color:#647981}
+.tip-creator-arrow{font-size:26px;color:#07836d}
+.tip-friends-loading,.tip-friends-empty{padding:22px 12px;text-align:center;color:#60757d;font-size:14px}
+.tip-friends-empty p{margin:8px 0 0}
+.tip-friends-note{margin:15px 3px 0;color:#687d84;font-size:12px;line-height:1.45}
+@media(min-width:700px){.tip-friends-overlay{align-items:center}.tip-friends-panel{border-radius:24px;max-height:80vh;padding:26px}}
+
 </style>
 </head>
 <body>
@@ -727,6 +750,14 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
 <div class="search-controls"><button id="searchAll" class="active" onclick="tipSetSearchScope('all')">Toda la comunidad</button><button id="searchMine" onclick="tipSetSearchScope('mine')">Mis publicaciones</button></div>
 <form class="search-entry" onsubmit="event.preventDefault();tipFilterSearch()"><input id="tipSearchInput" placeholder="Tema, título o palabra clave" oninput="tipFilterSearch()"><button type="submit">BUSCAR</button></form>
 <p class="search-hint">También podés presionar Enter para buscar.</p><div id="searchResultCount"></div><div id="tipSearchResults"></div></div></div>
+<div id="tipFriendsOverlay" class="tip-friends-overlay" onclick="if(event.target===this)tipCloseFriends()">
+ <section class="tip-friends-panel" aria-label="Descubrir creadores">
+  <div class="tip-friends-heading"><div><p class="tip-friends-eyebrow">COMUNIDAD TIPNOVA</p><h2>Descubrí creadores</h2><p>Encontrá personas que comparten lo que saben.</p></div><button class="tip-friends-close" onclick="tipCloseFriends()" aria-label="Cerrar">×</button></div>
+  <input id="tipFriendsQuery" class="tip-friends-search" type="search" placeholder="Buscar por nombre o usuario" oninput="tipFilterCreators()" aria-label="Buscar creadores">
+  <div id="tipFriendsList" class="tip-friends-list"></div>
+  <p class="tip-friends-note">Por ahora podés descubrir creadores y visitar sus perfiles. La opción de seguirlos llegará en una próxima etapa.</p>
+ </section>
+</div>
 <div id="tipProfileOverlay" onclick="if(event.target===this)tipCloseProfile()"><div id="tipProfileCard"></div></div>
 <div id="tipToast"></div>
 <footer>TIPNOVA · Todos sabemos algo. Compartilo.</footer>
@@ -889,7 +920,46 @@ function tipTopSelect(button,section){
 let tipSearchScope="all";
 function tipSetActiveNav(id){document.querySelectorAll("#tipBottomNav button").forEach(b=>b.classList.remove("active"));const el=document.getElementById(id);if(el)el.classList.add("active");}
 function tipGoHome(){document.getElementById("tipSearch").classList.remove("open");document.getElementById("feed").scrollTo({top:0,behavior:"smooth"});tipSetActiveNav("navHome");}
-function tipOpenFriends(){tipSetActiveNav("navFriends");tipToast("Amigos: próximamente vas a poder encontrar y seguir a tus amigos.");}
+let tipCreators=[];
+async function tipOpenFriends(){
+ tipSetActiveNav("navFriends");
+ const panel=document.getElementById("tipFriendsOverlay");
+ const body=document.getElementById("tipFriendsList");
+ panel.classList.add("open");
+ body.innerHTML='<div class="tip-friends-loading">Buscando creadores de TIPNOVA...</div>';
+ try{
+  if(!publicaciones.length) await cargarTips();
+  const ids=[...new Set(publicaciones.map(t=>t.user_id).filter(Boolean))];
+  if(!ids.length){
+   body.innerHTML='<div class="tip-friends-empty"><strong>Todavía no hay creadores para mostrar.</strong><p>Cuando la comunidad publique sus primeros videos, vas a poder descubrirlos acá.</p></div>';
+   tipCreators=[];return;
+  }
+  const {data,error}=await db.from("profiles").select("user_id,username,display_name,bio").in("user_id",ids);
+  if(error) throw error;
+  const map={};(data||[]).forEach(p=>map[p.user_id]=p);
+  const counts={};publicaciones.forEach(t=>counts[t.user_id]=(counts[t.user_id]||0)+1);
+  tipCreators=ids.map(id=>({user_id:id,profile:map[id]||{},count:counts[id]||0}))
+   .sort((a,b)=>b.count-a.count);
+  tipFilterCreators();
+ }catch(e){
+  body.innerHTML='<div class="tip-friends-empty">No se pudieron cargar los creadores. '+escapar(e.message)+'</div>';
+ }
+}
+function tipFilterCreators(){
+ const q=(document.getElementById("tipFriendsQuery")?.value||"").trim().toLowerCase();
+ const found=tipCreators.filter(c=>{
+  const p=c.profile||{};
+  return ((p.display_name||"")+" "+(p.username||"")+" "+(p.bio||"")).toLowerCase().includes(q);
+ });
+ const body=document.getElementById("tipFriendsList");
+ body.innerHTML=found.map(c=>{
+  const p=c.profile||{},name=p.display_name||p.username||"Miembro de TIPNOVA";
+  const initial=escapar(name.trim().charAt(0).toUpperCase()||"T");
+  return '<button class="tip-creator-card" onclick="verPerfilPublico(\''+escapar(c.user_id)+'\')"><span class="tip-creator-avatar">'+initial+'</span><span class="tip-creator-info"><strong>'+escapar(name)+'</strong><small>'+(p.username?'@'+escapar(p.username)+' · ':'')+c.count+' publicación(es)</small></span><span class="tip-creator-arrow">›</span></button>';
+ }).join("")||'<div class="tip-friends-empty">No encontramos creadores con ese nombre.</div>';
+}
+function tipCloseFriends(){document.getElementById("tipFriendsOverlay").classList.remove("open");tipSetActiveNav("navHome");}
+
 function tipOpenMessages(){tipSetActiveNav("navMessages");tipToast("Mensajes: estamos preparando el chat privado.");}
 function tipOpenSearch(){tipSetActiveNav("navSearch");document.getElementById("tipSearch").classList.add("open");document.getElementById("tipSearchInput").focus();tipFilterSearch();}
 function tipCloseSearch(){document.getElementById("tipSearch").classList.remove("open");tipSetActiveNav("navHome");}
