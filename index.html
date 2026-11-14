@@ -871,6 +871,24 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
 #feed .tip .actions .tip-like:before{color:#a62d56!important}
 #feed .tip .actions .tip-follow{cursor:pointer!important;touch-action:manipulation!important}
 #feed .tip .actions button{touch-action:manipulation!important}
+ 
+/* TIPNOVA v23: hoja de comentarios pegada al borde inferior y bloqueo del resto */
+body:has(#feed [id^="comentarios-"].open){overflow:hidden!important}
+body:has(#feed [id^="comentarios-"].open)::before{content:"";position:fixed;inset:0;z-index:9998;background:#061a20a8;backdrop-filter:blur(2px)}
+#feed .tip [id^="comentarios-"].open{z-index:9999!important;bottom:0!important;left:0!important;right:0!important;width:100vw!important;height:min(78dvh,780px)!important;max-height:88dvh!important;margin:0!important;border-radius:24px 24px 0 0!important;padding:0 0 calc(env(safe-area-inset-bottom))!important;box-shadow:0 -16px 50px #061a2080!important;overscroll-behavior:contain!important}
+#tipBottomNav{z-index:20!important}
+#feed .tip.comments-active .actions{pointer-events:none!important}
+#feed .tip .tip-tools{display:flex!important;gap:10px!important;flex-wrap:wrap!important;margin:10px 0 14px!important}
+#feed .tip .tip-tools button{min-height:38px!important;padding:7px 13px!important;border-radius:18px!important;background:#e7f5ef!important;border:1px solid #a8d7c4!important;color:#14534e!important;font-weight:850!important}
+#feed .tip .comment-compose-wrap{flex:0 0 auto!important;padding:8px 12px calc(12px + env(safe-area-inset-bottom))!important;border-top:1px solid #d6e8e2!important;background:#f5fbfa!important}
+#feed .tip .comment-compose-wrap .comment-compose{padding:4px 0 0!important;border:0!important}
+#feed .tip .comment-tools{display:flex!important;gap:8px!important;position:relative!important;padding:0 0 6px!important}
+#feed .tip .comment-tools>button{width:38px!important;height:34px!important;min-height:34px!important;border-radius:12px!important;background:#e3f2ec!important;color:#15574e!important;font-weight:950!important}
+#feed .tip .comment-emoji-picker{display:none;position:absolute;bottom:42px;left:0;z-index:5;padding:8px;background:#fff;border:1px solid #c9dfd7;border-radius:14px;box-shadow:0 6px 20px #0002;gap:5px;flex-wrap:wrap;max-width:250px}
+#feed .tip .comment-emoji-picker.visible{display:flex!important}
+#feed .tip .comment-emoji-picker button{width:34px;height:34px;min-height:34px;padding:0;border-radius:9px;background:#f0f7f4;color:#173b46;font-size:19px}
+@media(max-width:699px){#feed .tip [id^="comentarios-"].open{height:min(78dvh,780px)!important}}
+
 </style>
 </head>
 <body>
@@ -1306,6 +1324,10 @@ async function cargarTips(){
    <p>${escapar(t.description)}</p>
    ${video?`<video autoplay muted loop playsinline preload="metadata" onclick="this.muted=!this.muted" src="${escapar(video)}"></video>`:""}
    <div class="muted">Publicado el ${new Date(t.created_at).toLocaleDateString("es-AR")}</div>
+   <div class="tip-tools">
+    <button type="button" onclick="compartirTip('${t.id}','${escapar(t.title).replace(/'/g,"&#39;")}')">↗ Compartir</button>
+    ${video?'<button type="button" onclick="descargarTip(\''+escapar(video)+'\',\''+escapar(t.title).replace(/'/g,"&#39;")+'\')">↓ Guardar video</button>':""}
+   </div>
    <div class="actions">
      <button class="tip-follow" onclick="return tipFollowCreator('${t.user_id}',event)">＋<span>SEGUIR</span></button>
     <button class="tip-useful ${v.mios.includes("useful")?"is-selected":" "} " aria-pressed="${v.mios.includes("useful")}" onclick="votar('${t.id}','useful')">${v.mios.includes("useful")?"✓ TE SIRVIÓ":"＋ ME SIRVIÓ"} · ${v.useful||0}</button>
@@ -1328,6 +1350,32 @@ async function votar(tipId,tipo){
   if(e){alert(e.message);return;}
  }
  await cargarTips();
+}
+function insertarEnComentario(tipId,texto){
+ const campo=document.getElementById("comentario-"+tipId);if(!campo)return;
+ const inicio=campo.selectionStart??campo.value.length,fin=campo.selectionEnd??inicio;
+ campo.value=campo.value.slice(0,inicio)+texto+campo.value.slice(fin);
+ campo.focus();campo.setSelectionRange(inicio+texto.length,inicio+texto.length);
+}
+function mostrarEmojis(tipId){
+ const panel=document.getElementById("emojis-"+tipId);if(panel)panel.classList.toggle("visible");
+}
+async function compartirTip(tipId,titulo){
+ const url=location.origin+location.pathname+"#tip-"+encodeURIComponent(tipId);
+ const datos={title:"TIPNOVA",text:"Mirá este TIP: "+titulo,url};
+ try{
+  if(navigator.share)await navigator.share(datos);
+  else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(url);alert("Enlace copiado. Ya podés compartirlo.");}
+  else prompt("Copiá este enlace para compartir:",url);
+ }catch(e){if(e.name!=="AbortError")alert("No se pudo abrir el menú para compartir.");}
+}
+async function descargarTip(url,titulo){
+ try{
+  const respuesta=await fetch(url);if(!respuesta.ok)throw new Error("No se pudo descargar el video");
+  const blob=await respuesta.blob(),obj=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=obj;a.download=(titulo||"TIPNOVA").replace(/[^a-z0-9áéíóúñ_-]/gi,"_")+".mp4";
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(obj),1500);
+ }catch(e){alert("No se pudo guardar el video. Podés abrirlo y usar la opción de descarga del navegador.");}
 }
 function cerrarComentarios(tipId){
  const zona=document.getElementById("comentarios-"+tipId);
@@ -1377,7 +1425,7 @@ async function verComentarios(tipId, mostrarFormulario=true){
  }).join("");
  zona.querySelector(".comment-list").innerHTML=lista||'<div class="comment-empty"><span>✦</span><strong>Acá empieza la conversación</strong><small>Compartí una idea, hacé una pregunta o dejá tu aporte.</small></div>';
  zona.insertAdjacentHTML("beforeend",mostrarFormulario
- ? '<div class="comment-compose"><div class="comment-compose-avatar">'+(usuario?escapar((usuario.email||"T")[0].toUpperCase()):"T")+'</div><textarea id="comentario-'+tipId+'" maxlength="500" placeholder="Sumate a la conversación..."></textarea><button type="button" aria-label="Enviar comentario" onclick="comentar(\''+tipId+'\')">➤</button></div>'
+ ? '<div class="comment-compose-wrap"><div class="comment-tools"><button type="button" onclick="insertarEnComentario(\''+tipId+'\',\'@\')" aria-label="Mencionar a alguien">@</button><button type="button" onclick="mostrarEmojis(\''+tipId+'\')" aria-label="Agregar emoji">☺</button><div class="comment-emoji-picker" id="emojis-'+tipId+'"><button type="button" onclick="insertarEnComentario(\''+tipId+'\',\'😀\')">😀</button><button type="button" onclick="insertarEnComentario(\''+tipId+'\',\'😂\')">😂</button><button type="button" onclick="insertarEnComentario(\''+tipId+'\',\'😍\')">😍</button><button type="button" onclick="insertarEnComentario(\''+tipId+'\',\'👏\')">👏</button><button type="button" onclick="insertarEnComentario(\''+tipId+'\',\'❤️\')">❤️</button><button type="button" onclick="insertarEnComentario(\''+tipId+'\',\'🔥\')">🔥</button><button type="button" onclick="insertarEnComentario(\''+tipId+'\',\'🙏\')">🙏</button></div></div><div class="comment-compose"><div class="comment-compose-avatar">'+(usuario?escapar((usuario.email||"T")[0].toUpperCase()):"T")+'</div><textarea id="comentario-'+tipId+'" maxlength="500" placeholder="Sumate a la conversación..."></textarea><button type="button" aria-label="Enviar comentario" onclick="comentar(\''+tipId+'\')">➤</button></div></div>'
  : '<div class="comment-compose comment-compose-again"><button type="button" class="comment-again" onclick="verComentarios(\''+tipId+'\',true)">＋ Escribir otro comentario</button></div>');
 }
 async function comentar(tipId){
