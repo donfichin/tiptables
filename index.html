@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TIPNOVA — Todos sabemos algo</title>
-<meta name="theme-color" content="#101812">
+<meta name="theme-color" content="#101b22">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TIPNOVA">
@@ -894,6 +894,16 @@ body:has(#feed [id^="comentarios-"].open)::before{content:"";position:fixed;inse
 #tipProfileOverlay{z-index:10010!important;isolation:isolate!important}
 #tipProfileOverlay.open{display:flex!important;z-index:10010!important}
 #tipProfileCard{z-index:10011!important;max-height:82dvh!important;overflow-y:auto!important;overscroll-behavior:contain!important}
+
+/* TIPNOVA v28: eliminar franja clara debajo de la navegación inferior */
+html,body,main{background:#101b22!important}
+#tipBottomNav{
+  bottom:0!important;
+  height:calc(62px + env(safe-area-inset-bottom, 0px))!important;
+  padding:4px 10px calc(4px + env(safe-area-inset-bottom, 0px))!important;
+  background:#101b22!important;
+  border-top:1px solid #ffffff20!important;
+}
 </style>
 </head>
 <body>
