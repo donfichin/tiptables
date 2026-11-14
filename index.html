@@ -715,6 +715,32 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
  #feed .tip .actions button:last-child{width:76px!important;min-width:76px!important;height:76px!important;min-height:76px!important;font-size:13px!important}
 }
 
+
+/* TIPNOVA v14: lectura consistente en navegación, comentarios y perfiles */
+@media(max-width:699px){
+ #tipTopTabs .tip-tabs button{font-size:14px!important;font-weight:900!important;min-height:50px!important;padding:11px 5px!important;color:#f2f7f8!important}
+ #tipTopTabs .tip-tabs button.active{color:#fff!important}
+ #tipBottomNav button{font-size:13px!important;font-weight:900!important;line-height:1.15!important;color:#f0f6f8!important}
+ #tipBottomNav button.active{color:#78f0cf!important}
+ #tipBottomNav #navCrear{font-size:14px!important}
+ #tipProfileCard{font-size:17px!important;line-height:1.5!important;padding:28px 22px calc(24px + env(safe-area-inset-bottom))!important}
+ #tipProfileCard h2{font-size:27px!important;line-height:1.2!important}
+ #tipProfileCard h3{font-size:20px!important}
+ #tipProfileCard p,#tipProfileCard .profile-email{font-size:17px!important;line-height:1.5!important}
+ #tipProfileCard button{min-height:54px!important;font-size:17px!important;font-weight:900!important}
+ #feed .tip [id^="comentarios-"].open{padding:20px 16px calc(22px + env(safe-area-inset-bottom))!important;max-height:70dvh!important}
+ #feed .tip [id^="comentarios-"] .comment{font-size:16px!important;line-height:1.5!important;padding:13px!important;color:#142f3a!important}
+ #feed .tip [id^="comentarios-"] .comment-empty{font-size:15px!important;line-height:1.45!important;color:#344f59!important}
+ #feed .tip [id^="comentarios-"] textarea{font-size:17px!important;line-height:1.4!important;min-height:76px!important;padding:14px!important;color:#142f3a!important}
+ #feed .tip [id^="comentarios-"] button{font-size:16px!important;line-height:1.25!important;min-height:56px!important;padding:13px!important}
+}
+@media(max-width:390px){
+ #tipTopTabs .tip-brand{font-size:17px!important}
+ #tipTopTabs .tip-tabs{gap:3px!important}
+ #tipTopTabs .tip-tabs button{font-size:12px!important;padding:10px 3px!important;letter-spacing:0!important}
+ #tipBottomNav button{font-size:12px!important}
+}
+
 </style>
 </head>
 <body>
