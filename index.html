@@ -741,6 +741,42 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
  #tipBottomNav button{font-size:12px!important}
 }
 
+
+/* TIPNOVA v15: botones de acciones legibles y publicación guiada */
+@media(max-width:699px){
+ #feed .tip .actions{right:8px!important;top:50%!important;bottom:auto!important;transform:translateY(-35%)!important;width:104px!important;min-height:0!important;padding:10px 6px!important;gap:11px!important;border-radius:25px!important;background:rgba(4,15,24,.96)!important;border:2px solid #d7e8ef!important;box-shadow:0 8px 24px #0009!important;backdrop-filter:blur(14px)!important}
+ #feed .tip .actions button,#feed .tip .actions button.light,#feed .tip .actions button.green,#feed .tip .actions button:nth-child(1),#feed .tip .actions button:nth-child(2),#feed .tip .actions button:nth-child(3){width:90px!important;min-width:90px!important;max-width:90px!important;height:84px!important;min-height:84px!important;flex:0 0 84px!important;padding:8px 5px!important;margin:0!important;border-radius:18px!important;display:flex!important;align-items:center!important;justify-content:center!important;white-space:normal!important;overflow:visible!important;text-align:center!important;font-family:Arial,sans-serif!important;font-size:14px!important;line-height:1.2!important;font-weight:1000!important;letter-spacing:0!important;text-shadow:none!important}
+ #feed .tip .actions button:nth-child(1){background:#8df0d2!important;color:#07372e!important;border:2px solid #e2fff5!important}
+ #feed .tip .actions button:nth-child(2){background:#f8dce5!important;color:#5a1730!important;border:2px solid #fff0f5!important}
+ #feed .tip .actions button:nth-child(3){background:#ffd166!important;color:#302000!important;border:2px solid #fff0bd!important}
+ #feed .tip .actions button:before{font-size:27px!important;line-height:1!important}
+ #feed .tip h3,#feed .tip p,#feed .tip .category,#feed .tip>.muted{margin-right:124px!important}
+ #feed .tip [id^="comentarios-"].open{left:8px!important;right:8px!important;bottom:calc(90px + env(safe-area-inset-bottom))!important;max-height:68dvh!important;padding:18px!important;background:#f8fcfd!important;color:#102f3a!important;border:2px solid #b8d2da!important;box-shadow:0 -10px 36px #0008!important}
+ #feed .tip [id^="comentarios-"] button,#feed .tip [id^="comentarios-"] button.comment-again{background:#075b50!important;color:#fff!important;border:2px solid #06463e!important;font-size:17px!important;font-weight:1000!important;min-height:60px!important;padding:14px!important}
+ #feed .tip [id^="comentarios-"] textarea{font-size:18px!important;color:#102f3a!important;background:#fff!important}
+ #feed .tip [id^="comentarios-"] .comment{font-size:17px!important;color:#102f3a!important}
+ #tipCrearOverlay{align-items:center!important;justify-content:center!important;padding:10px!important;background:rgba(0,8,14,.94)!important}
+ #tipCrearOverlay #crear{width:calc(100% - 8px)!important;max-width:560px!important;max-height:88dvh!important;overflow-y:auto!important;margin:0!important;padding:25px 20px calc(24px + env(safe-area-inset-bottom))!important;border:2px solid #c7e4e7!important;border-radius:25px!important;background:#f8fcfd!important;color:#102f3a!important}
+ #tipCrearOverlay #crear h2{font-size:29px!important;line-height:1.2!important;font-weight:1000!important;margin:0 0 10px!important;color:#073f46!important}
+ #tipCrearOverlay #crear .tip-create-intro{font-size:17px!important;line-height:1.45!important;color:#344f59!important;margin:0 0 20px!important}
+ #tipCrearOverlay #crear label{font-size:17px!important;line-height:1.3!important;font-weight:900!important;color:#123b46!important;margin:15px 0 8px!important}
+ #tipCrearOverlay #crear input,#tipCrearOverlay #crear textarea,#tipCrearOverlay #crear select{box-sizing:border-box!important;width:100%!important;min-height:58px!important;padding:15px!important;border:2px solid #b9cdd3!important;border-radius:15px!important;background:#fff!important;color:#102f3a!important;font-size:18px!important;line-height:1.35!important}
+ #tipCrearOverlay #crear textarea{min-height:112px!important}
+ #tipCrearOverlay #crear .row{display:grid!important;grid-template-columns:1fr!important;gap:12px!important;margin:12px 0!important}
+ #tipCrearOverlay #crear .row button{width:100%!important;min-height:70px!important;padding:15px!important;border-radius:18px!important;font-size:18px!important;line-height:1.25!important;font-weight:1000!important}
+ #tipCrearOverlay #crear .row button.green{background:#087c69!important;color:#fff!important;border:2px solid #055d50!important}
+ #tipCrearOverlay #crear .row button.light{background:#ffcf65!important;color:#332300!important;border:2px solid #e5ae35!important}
+ #tipCrearOverlay #crear #videoElegido{font-size:16px!important;line-height:1.45!important;color:#254b55!important;background:#e8f4f2!important;border-radius:13px!important;padding:12px!important}
+ #tipCrearOverlay #crear #publicar{width:100%!important;min-height:66px!important;margin-top:12px!important;border-radius:18px!important;background:#073f46!important;color:#fff!important;border:2px solid #052f35!important;font-size:19px!important;font-weight:1000!important}
+ #tipCrearOverlay #crear>p:last-child{font-size:15px!important;line-height:1.45!important;color:#405963!important}
+}
+@media(max-width:390px){
+ #feed .tip .actions{width:98px!important;right:5px!important;padding:8px 4px!important}
+ #feed .tip .actions button,#feed .tip .actions button.light,#feed .tip .actions button.green,#feed .tip .actions button:nth-child(1),#feed .tip .actions button:nth-child(2),#feed .tip .actions button:nth-child(3){width:86px!important;min-width:86px!important;max-width:86px!important;font-size:13px!important}
+ #feed .tip h3,#feed .tip p,#feed .tip .category,#feed .tip>.muted{margin-right:112px!important}
+ #tipCrearOverlay #crear{padding-left:16px!important;padding-right:16px!important}
+}
+
 </style>
 </head>
 <body>
@@ -769,6 +805,7 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
 
  <section class="panel hidden" id="crear">
   <h2>Compartí lo que sabés</h2>
+   <p class="tip-create-intro">Publicá un consejo en video. Primero elegí cómo agregarlo y después completá los datos.</p>
   <label>Título del TIP</label>
   <input id="titulo" maxlength="100" placeholder="Ej.: Cómo ordenar datos en Excel">
   <label>Comunidad</label>
@@ -782,8 +819,8 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
   <textarea id="descripcion" placeholder="Contá brevemente cómo se hace..."></textarea>
   <label>Tu video (máximo 50 MB)</label>
 <div class="row">
-  <button type="button" class="green" onclick="document.getElementById('videoCamara').click()">🎥 Grabar video</button>
-  <button type="button" class="light" onclick="document.getElementById('videoGaleria').click()">🖼 Elegir de galería</button>
+  <button type="button" class="green" onclick="document.getElementById('videoCamara').click()">🎥 GRABAR VIDEO</button>
+  <button type="button" class="light" onclick="document.getElementById('videoGaleria').click()">🖼 ELEGIR DE GALERÍA</button>
 </div>
 <input id="videoCamara" type="file" accept="video/*" capture="environment" hidden onchange="seleccionarVideo(this)">
 <input id="videoGaleria" type="file" accept="video/*" hidden onchange="seleccionarVideo(this)">
@@ -1153,7 +1190,7 @@ async function cargarTips(){
    <div class="actions">
     <button class="${v.mios.includes("useful")?"green":"light"}" onclick="votar('${t.id}','useful')">✓ ME SIRVIÓ · ${v.useful||0}</button>
     <button class="${v.mios.includes("like")?"green":"light"}" onclick="votar('${t.id}','like')">♡ Me gusta · ${v.like||0}</button>
-    <button class="light" onclick="toggleComentarios('${t.id}')">Comentarios · ${cantComentarios[t.id]||0}</button>
+    <button class="light" onclick="toggleComentarios('${t.id}')">💬 COMENTAR · ${cantComentarios[t.id]||0}</button>
    </div>
    <div id="comentarios-${t.id}"></div>
   </article>`;
