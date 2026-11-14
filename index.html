@@ -677,6 +677,44 @@ html,body{background:var(--tt-ink)!important;color:#fff!important;font-size:17px
 .tip-friends-note{margin:15px 3px 0;color:#687d84;font-size:12px;line-height:1.45}
 @media(min-width:700px){.tip-friends-overlay{align-items:center}.tip-friends-panel{border-radius:24px;max-height:80vh;padding:26px}}
 
+
+/* TIPNOVA: accesibilidad y lectura en celulares */
+@media(max-width:699px){
+ .tip-friends-overlay{align-items:center!important;padding:8px!important}
+ .tip-friends-panel{width:calc(100% - 8px)!important;max-width:620px!important;max-height:84dvh!important;padding:26px 20px calc(24px + env(safe-area-inset-bottom))!important;border-radius:24px!important}
+ .tip-friends-heading h2{font-size:29px!important;line-height:1.15!important;margin:4px 0 8px!important}
+ .tip-friends-heading p{font-size:17px!important;line-height:1.4!important;color:#344f59!important}
+ .tip-friends-eyebrow{font-size:13px!important;letter-spacing:1.2px!important}
+ .tip-friends-close{width:50px!important;height:50px!important;flex-basis:50px!important;font-size:32px!important;background:#dce9ec!important;color:#102f3a!important}
+ .tip-friends-search{min-height:58px!important;margin:22px 0 14px!important;padding:16px 17px!important;font-size:18px!important;border:2px solid #aebfc5!important;color:#102f3a!important}
+ .tip-friends-search::placeholder{color:#52666e!important;opacity:1!important}
+ .tip-creator-card{min-height:76px!important;padding:14px!important;gap:14px!important;border:2px solid #c9d9dc!important}
+ .tip-creator-avatar{width:56px!important;height:56px!important;flex-basis:56px!important;font-size:25px!important}
+ .tip-creator-info strong{font-size:18px!important;line-height:1.25!important;color:#102f3a!important}
+ .tip-creator-info small{font-size:15px!important;color:#405963!important}
+ .tip-creator-arrow{font-size:32px!important}
+ .tip-friends-loading,.tip-friends-empty{font-size:17px!important;line-height:1.45!important;color:#344f59!important}
+ .tip-friends-empty p{font-size:16px!important}
+ .tip-friends-note{font-size:15px!important;line-height:1.5!important;color:#405963!important;margin-top:18px!important}
+ #feed .tip .actions{right:9px!important;gap:12px!important;bottom:calc(112px + env(safe-area-inset-bottom))!important}
+ #feed .tip .actions button,
+ #feed .tip .actions button:first-child,
+ #feed .tip .actions button:nth-child(2),
+ #feed .tip .actions button:last-child{width:82px!important;min-width:82px!important;height:82px!important;min-height:82px!important;padding:8px 5px!important;border-radius:20px!important;font-size:14px!important;line-height:1.22!important;font-weight:900!important;letter-spacing:.1px!important;text-shadow:none!important}
+ #feed .tip .actions button.green{background:#9ff0d7!important;color:#063b32!important;border:2px solid #e1fff5!important}
+ #feed .tip .actions button:not(.green):not(:last-child){background:#102b3b!important;color:#fff!important;border:2px solid #b8d5df!important}
+ #feed .tip .actions button:last-child{background:#ffd166!important;color:#302000!important;border:2px solid #fff0bd!important;font-size:14px!important}
+}
+@media(max-width:380px){
+ .tip-friends-panel{padding-left:16px!important;padding-right:16px!important}
+ .tip-friends-heading h2{font-size:26px!important}
+ #feed .tip .actions{right:6px!important;gap:9px!important}
+ #feed .tip .actions button,
+ #feed .tip .actions button:first-child,
+ #feed .tip .actions button:nth-child(2),
+ #feed .tip .actions button:last-child{width:76px!important;min-width:76px!important;height:76px!important;min-height:76px!important;font-size:13px!important}
+}
+
 </style>
 </head>
 <body>
