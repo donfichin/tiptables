@@ -1060,7 +1060,23 @@ function tipTopSelect(button,section){
 let tipSearchScope="all";
 function tipSetActiveNav(id){document.querySelectorAll("#tipBottomNav button").forEach(b=>b.classList.remove("active"));const el=document.getElementById(id);if(el)el.classList.add("active");}
 function tipCloseAllPanels(){["tipSearch","tipFriendsOverlay","tipProfileOverlay","tipCuentaOverlay","tipCrearOverlay"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("open");});}
-function tipGoHome(){tipCloseAllPanels();const feed=document.getElementById("feed");if(feed){feed.style.display="";feed.scrollTo({top:0,behavior:"smooth"});}tipSetActiveNav("navHome");}
+function tipRestoreMainPanels(){
+ const main=document.querySelector("main");
+ const sesion=document.getElementById("sesionActiva");
+ const cuenta=document.getElementById("cuenta");
+ const crear=document.getElementById("crear");
+ if(main&&cuenta&&cuenta.parentElement!==main)main.insertBefore(cuenta,sesion?sesion.nextSibling:main.firstChild);
+ const feed=document.getElementById("feed");
+ const crearOverlay=document.getElementById("tipCrearOverlay");
+ if(main&&crear&&crearOverlay&&crear.parentElement!==main){const feedSection=feed?.parentElement;if(feedSection)main.insertBefore(crear,feedSection);else main.appendChild(crear);}
+}
+function tipGoHome(){
+ tipCloseAllPanels();tipRestoreMainPanels();
+ const main=document.querySelector("main");if(main){main.style.display="";main.style.visibility="visible";}
+ const feed=document.getElementById("feed");
+ if(feed){feed.style.display="block";feed.style.visibility="visible";feed.style.opacity="1";feed.style.pointerEvents="auto";feed.scrollTo({top:0,behavior:"smooth"});}
+ tipSetActiveNav("navHome");
+}
 let tipCreators=[];
 async function tipOpenFriends(){
  tipSetActiveNav("navFriends");
