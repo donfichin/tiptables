@@ -904,11 +904,20 @@ html,body,main{background:#101b22!important}
   background:#101b22!important;
   border-top:1px solid #ffffff20!important;
 }
+
+/* TIPNOVA v30: perfil editable, identidad de creador */
+#tipProfileCard .profile-edit-grid{display:flex;flex-direction:column;gap:7px;margin:16px 0;text-align:left}
+#tipProfileCard .profile-edit-grid label{font-size:12px;font-weight:900;color:#173f49;margin-top:5px}
+#tipProfileCard .profile-edit-grid input,#tipProfileCard .profile-edit-grid textarea{width:100%;box-sizing:border-box;border:1px solid #cbdadd;border-radius:12px;padding:12px;background:#fff;color:#172b34;font:inherit;font-size:14px}
+#tipProfileCard .profile-edit-grid small{font-size:11px;color:#60757c;margin-top:-3px}
+#tipProfileCard .profile-edit-grid button{background:#087b68;color:#fff;border-radius:14px;padding:12px;font-weight:900}
+#tipProfileCard .profile-save-status{font-size:12px;color:#45616a;margin:4px 0}
+
 </style>
 </head>
 <body>
 <header>
- <div><div class="logo">TIP<span>TOPS</span></div><div class="muted">TODOS SABEMOS ALGO. COMPARTILO.</div></div>
+ <div><div class="logo">TIP<span>NOVA</span></div><div class="muted">TODOS SABEMOS ALGO. COMPARTILO.</div></div>
 <button class="green" onclick="toggleCrear()">＋ Publicar TIP</button>
 </header>
 <main>
@@ -1104,14 +1113,42 @@ function tipToast(msg){
  const el=document.getElementById("tipToast");el.textContent=msg;el.style.display="block";
  clearTimeout(window.tipToastTimer);window.tipToastTimer=setTimeout(()=>el.style.display="none",2200);
 }
-function tipOpenAccount(){tipSetActiveNav("navProfile");
+async function tipOpenAccount(){tipSetActiveNav("navProfile");
  if(usuario){
-  document.getElementById("tipProfileCard").innerHTML='<div class="profile-avatar">♙</div><h2>Tu perfil TIPNOVA</h2><div class="session-pill">● SESIÓN ACTIVA</div><div class="profile-email">'+escapar(usuario.email||"Cuenta TIPNOVA")+'</div><p>Tu cuenta está conectada. Ya podés valorar, comentar y publicar consejos.</p><button onclick="tipShowMyPosts()">Ver mis publicaciones</button><button class="secondary" onclick="cerrarSesion();tipCloseProfile()">Cerrar sesión</button><button class="secondary" onclick="tipCloseProfile()">Volver al feed</button>';
+  const card=document.getElementById("tipProfileCard");
+  card.innerHTML='<div class="profile-avatar">'+escapar((usuario.email||"T").charAt(0).toUpperCase())+'</div><h2>Mi perfil TIPNOVA</h2><div class="session-pill">● SESIÓN ACTIVA</div><p class="profile-email">'+escapar(usuario.email||"Cuenta TIPNOVA")+'</p><div class="profile-edit-grid"><label for="perfilNombre">Nombre público</label><input id="perfilNombre" maxlength="40" placeholder="Cómo querés que te conozcan"><label for="perfilUsuario">Nombre de usuario</label><input id="perfilUsuario" maxlength="24" placeholder="Ej.: mariano_tips"><small>Usá letras, números y guion bajo. Sin espacios.</small><label for="perfilBio">Sobre mí</label><textarea id="perfilBio" maxlength="180" rows="3" placeholder="Contá qué cosas sabés o te gusta enseñar (máximo 180 caracteres)"></textarea><button type="button" onclick="guardarMiPerfil()">Guardar mi perfil</button><p id="perfilEstado" class="profile-save-status">Completá tus datos para que la comunidad te reconozca.</p></div><button class="secondary" onclick="tipShowMyPosts()">Ver mis publicaciones</button><button class="secondary" onclick="cerrarSesion();tipCloseProfile()">Cerrar sesión</button><button class="secondary" onclick="tipCloseProfile()">Volver al feed</button>';
   document.getElementById("tipProfileOverlay").classList.add("open");
+  await tipCargarMiPerfil();
   return;
  }
  const ov=document.getElementById("tipCuentaOverlay");ov.classList.add("open");
  const cuenta=document.getElementById("cuenta");document.getElementById("cuentaMount").appendChild(cuenta);
+}
+async function tipCargarMiPerfil(){
+ const estado=document.getElementById("perfilEstado");
+ try{
+  const {data,error}=await db.from("profiles").select("display_name,username,bio").eq("user_id",usuario.id).maybeSingle();
+  if(error)throw error;
+  if(data){
+   document.getElementById("perfilNombre").value=data.display_name||"";
+   document.getElementById("perfilUsuario").value=data.username||"";
+   document.getElementById("perfilBio").value=data.bio||"";
+  }
+ }catch(e){if(estado)estado.textContent="No pudimos cargar los datos del perfil: "+e.message;}
+}
+async function guardarMiPerfil(){
+ if(!usuario)return;
+ const nombre=document.getElementById("perfilNombre").value.trim();
+ const username=document.getElementById("perfilUsuario").value.trim().toLowerCase();
+ const bio=document.getElementById("perfilBio").value.trim();
+ const estado=document.getElementById("perfilEstado");
+ if(!nombre){estado.textContent="Escribí un nombre público.";return;}
+ if(username&&!/^[a-z0-9_]{3,24}$/.test(username)){estado.textContent="El usuario debe tener entre 3 y 24 caracteres: letras, números o guion bajo.";return;}
+ estado.textContent="Guardando...";
+ const {error}=await db.from("profiles").upsert({user_id:usuario.id,display_name:nombre,username:username||null,bio},{onConflict:"user_id"});
+ if(error){estado.textContent="No se pudo guardar: "+error.message;return;}
+ estado.textContent="¡Perfil guardado! Ya podés aparecer con tu nombre en TIPNOVA.";
+ tipToast("Tu perfil fue actualizado.");
 }
 function tipCloseAccount(){tipGoHome();}
 function tipCloseProfile(){tipGoHome();}
