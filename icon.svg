@@ -1,7 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#071820"/>
-  <circle cx="256" cy="256" r="190" fill="#78f0cf"/>
-  <path d="M137 158h238v66h-85v188h-68V224h-85z" fill="#071820"/>
-  <circle cx="366" cy="358" r="42" fill="#ffd66e"/>
-  <path d="M350 358l11 11 22-25" fill="none" stroke="#071820" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<defs>
+ <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#00d8d2"/><stop offset=".55" stop-color="#78f0cf"/><stop offset="1" stop-color="#ffc928"/></linearGradient>
+ <linearGradient id="person" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#13d6dc"/><stop offset=".55" stop-color="#79edc5"/><stop offset="1" stop-color="#ffd044"/></linearGradient>
+ <linearGradient id="left" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#00cde0"/><stop offset="1" stop-color="#2479ed"/></linearGradient>
+ <linearGradient id="right" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe15a"/><stop offset="1" stop-color="#ff9f18"/></linearGradient>
+</defs>
+<rect width="512" height="512" rx="112" fill="#071a3d"/>
+<circle cx="256" cy="256" r="211" fill="none" stroke="url(#ring)" stroke-width="17"/>
+<!-- libro abierto: todos aprendemos -->
+<path d="M72 348 Q157 326 246 402 L256 431 L266 402 Q355 326 440 348 L427 402 Q348 385 256 464 Q164 385 85 402Z" fill="#fff7e8"/>
+<path d="M86 408 Q171 393 256 464 L256 485 Q167 420 96 430Z" fill="#00cfc5"/>
+<path d="M426 408 Q341 393 256 464 L256 485 Q345 420 416 430Z" fill="#ffc52d"/>
+<!-- dos personas que aprenden y enseñan -->
+<circle cx="147" cy="240" r="27" fill="#14d4e0"/>
+<path d="M82 300 Q94 255 147 267 Q197 255 211 300 L197 335 Q160 314 147 314 Q126 314 96 335Z" fill="url(#left)"/>
+<circle cx="365" cy="240" r="27" fill="#ffc52d"/>
+<path d="M301 300 Q315 255 365 267 Q418 255 430 300 L416 335 Q386 314 365 314 Q344 314 316 335Z" fill="url(#right)"/>
+<!-- figura central: puede enseñar y aprender -->
+<circle cx="256" cy="126" r="34" fill="#ffc928"/>
+<path d="M132 174 Q128 155 151 151 L223 169 Q256 178 289 169 L361 151 Q384 155 380 178 L365 222 Q361 239 343 244 L292 230 L292 326 Q292 358 256 358 Q220 358 220 326 L220 230 L169 244 Q151 239 147 222Z" fill="url(#person)"/>
+<!-- símbolo de compartir / reproducir aprendizaje -->
+<path d="M239 206 L239 260 Q239 270 249 264 L286 240 Q296 234 286 228 L249 202 Q239 196 239 206Z" fill="#071a3d"/>
 </svg>
