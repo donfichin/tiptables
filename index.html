@@ -984,7 +984,7 @@ html,body,main{background:#101b22!important}
 
 <div id="tipTopTabs"><span class="tip-brand"><img src="./icon.svg" alt="" aria-hidden="true"><span class="tip-brand-name">TIP<span>NOVA</span></span></span><div class="tip-tabs"><button onclick="tipTopSelect(this,'LIVE')">LIVE</button><button onclick="tipTopSelect(this,'COMUNIDAD')">Comunidad</button><button onclick="tipTopSelect(this,'SIGUIENDO')">Siguiendo</button><button class="active" onclick="tipTopSelect(this,'PARA TI')">Para ti</button></div><button class="tip-top-search" aria-label="Buscar" onclick="tipOpenSearch()">⌕</button></div>
 <nav id="tipBottomNav">
- <button id="navHome" class="active" onclick="tipGoHome()"><b>⌂</b><span>Inicio</span></button>
+ <button id="navHome" class="active" aria-current="page" onclick="tipGoHome()"><b>⌂</b><span>Inicio</span></button>
  <button id="navFriends" onclick="tipOpenFriends()"><b aria-hidden="true"><svg viewBox="0 0 28 28" width="27" height="27" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="3.2"/><path d="M3.8 21v-1.3a6.2 6.2 0 0 1 12.4 0V21z"/><circle cx="20" cy="9" r="2.5"/><path d="M18.4 15.2a5 5 0 0 1 5.8 4.9V21h-5"/></svg></b><span>Creadores</span></button>
  <button id="navCrear" onclick="tipOpenCreate()"><b>＋</b><span>Crear</span></button>
  <button id="navMessages" onclick="tipOpenMessages()"><b>▤</b><span>Mensajes</span></button>
@@ -1193,7 +1193,7 @@ function tipTopSelect(button,section){
  tipToast("Tu selección Para ti está activa.");
 }
 let tipSearchScope="all";
-function tipSetActiveNav(id){document.querySelectorAll("#tipBottomNav button").forEach(b=>b.classList.remove("active"));const el=document.getElementById(id);if(el)el.classList.add("active");}
+function tipSetActiveNav(id){document.querySelectorAll("#tipBottomNav button").forEach(b=>{b.classList.remove("active");b.removeAttribute("aria-current");});const el=document.getElementById(id);if(el){el.classList.add("active");el.setAttribute("aria-current","page");}}
 function tipCloseAllPanels(){["tipSearch","tipFriendsOverlay","tipProfileOverlay","tipCuentaOverlay","tipCrearOverlay"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("open");});}
 function tipRestoreMainPanels(){
  const main=document.querySelector("main");
@@ -1259,7 +1259,7 @@ function tipFollowCreator(userId,event){
  return false;
 }
 function tipOpenMessages(){tipSetActiveNav("navMessages");tipToast("Mensajes: estamos preparando el chat privado.");}
-function tipOpenSearch(){tipSetActiveNav("navSearch");document.getElementById("tipSearch").classList.add("open");document.getElementById("tipSearchInput").focus();tipFilterSearch();}
+function tipOpenSearch(){tipSetActiveNav("navHome");document.getElementById("tipSearch").classList.add("open");document.getElementById("tipSearchInput").focus();tipFilterSearch();}
 function tipCloseSearch(){document.getElementById("tipSearch").classList.remove("open");tipSetActiveNav("navHome");}
 function tipSetSearchScope(scope){tipSearchScope=scope;document.getElementById("searchAll").classList.toggle("active",scope==="all");document.getElementById("searchMine").classList.toggle("active",scope==="mine");tipFilterSearch();}
 function tipFilterSearch(){
