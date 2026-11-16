@@ -324,6 +324,9 @@ main>section:last-of-type>.row{display:none!important}
 #tipCrearOverlay{display:none;position:fixed;inset:0;z-index:100;background:#071116df;align-items:flex-end;justify-content:center;padding:10px}
 #tipCrearOverlay.open{display:flex}
 #tipCrearOverlay #crear{display:block!important;width:min(100%,560px);max-height:88dvh;overflow-y:auto;margin:0;background:#f8fbfc;color:#172b34;border-radius:22px;padding:20px}
+#tipCrearOverlay #crear .tip-create-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+#tipCrearOverlay #crear .tip-create-heading h2{margin:0;flex:1}
+#tipCrearOverlay #crear .tip-create-close{flex:0 0 44px;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;border:0;border-radius:50%;background:#e6eef0;color:#173f49;font-size:30px;line-height:1;font-weight:700;display:grid;place-items:center;box-shadow:0 2px 8px #173f4922}
 #tipCrearOverlay #crear h2{color:#173f49}
 #tipCrearOverlay #crear label{display:block}
 #tipCrearOverlay #crear input,#tipCrearOverlay #crear textarea,#tipCrearOverlay #crear select{background:white;color:#172b34}
@@ -948,7 +951,7 @@ html,body,main{background:#101b22!important}
  </section>
 
  <section class="panel hidden" id="crear">
-  <h2>Compartí lo que sabés</h2>
+  <div class="tip-create-heading"><h2>Compartí lo que sabés</h2><button type="button" class="tip-create-close" onclick="tipCloseCreate()" aria-label="Cancelar publicación y volver al muro">×</button></div>
    <p class="tip-create-intro">Publicá un consejo en video. Primero elegí cómo agregarlo y después completá los datos.</p>
   <label>Título del TIP</label>
   <input id="titulo" maxlength="100" placeholder="Ej.: Cómo ordenar datos en Excel">
@@ -1182,7 +1185,16 @@ function tipOpenCreate(){tipSetActiveNav("navCrear");
  const ov=document.getElementById("tipCrearOverlay");ov.classList.add("open");
  const crear=document.getElementById("crear");document.getElementById("crearMount").appendChild(crear);
 }
-function tipCloseCreate(){document.getElementById("tipCrearOverlay").classList.remove("open");}
+function tipCloseCreate(){
+ const overlay=document.getElementById("tipCrearOverlay");
+ if(overlay)overlay.classList.remove("open");
+ tipRestoreMainPanels();
+ const main=document.querySelector("main");
+ if(main){main.style.display="";main.style.visibility="visible";}
+ const feed=document.getElementById("feed");
+ if(feed){feed.style.display="block";feed.style.visibility="visible";feed.style.opacity="1";feed.style.pointerEvents="auto";}
+ tipSetActiveNav("navHome");
+}
 
 function tipTopSelect(button,section){
  document.querySelectorAll("#tipTopTabs .tip-tabs button").forEach(b=>b.classList.remove("active"));
