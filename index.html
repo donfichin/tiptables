@@ -1527,12 +1527,8 @@ db.auth.onAuthStateChange((event,session)=>{
 });
 actualizarSesion();
 cargarTips();
-["email","password"].forEach(id=>{
- const campo=document.getElementById(id);
- campo.addEventListener("keydown",e=>{
-  if(e.key==="Enter"){e.preventDefault();ingresar();}
- });
-});
+// El ingreso requiere una acción explícita sobre «Entrar a TIPNOVA».
+// No iniciar sesión al seleccionar una sugerencia del navegador ni al pulsar Enter.
 </script>
 <script>
 if ("serviceWorker" in navigator) {
