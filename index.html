@@ -1003,7 +1003,7 @@ html,body,main{background:#101b22!important}
   <div class="tip-friends-heading"><div><p class="tip-friends-eyebrow">COMUNIDAD TIPNOVA</p><h2>Descubrí creadores</h2><p>Encontrá personas que comparten lo que saben.</p></div><button class="tip-friends-close" onclick="tipCloseFriends()" aria-label="Cerrar">×</button></div>
   <input id="tipFriendsQuery" class="tip-friends-search" type="search" placeholder="Buscar por nombre o usuario" oninput="tipFilterCreators()" aria-label="Buscar creadores">
   <div id="tipFriendsList" class="tip-friends-list"></div>
-  <p class="tip-friends-note">Por ahora podés descubrir creadores y visitar sus perfiles. La opción de seguirlos llegará en una próxima etapa.</p>
+  <p class="tip-friends-note">Por ahora podés descubrir creadores y visitar sus perfiles. Podés abrir sus perfiles y seguirlos para ver sus publicaciones en la pestaña Siguiendo.</p>
  </section>
 </div>
 <div id="tipProfileOverlay" onclick="if(event.target===this)tipCloseProfile()"><div id="tipProfileCard"></div></div>
@@ -1198,11 +1198,28 @@ function tipCloseCreate(){
  tipSetActiveNav("navHome");
 }
 
-function tipTopSelect(button,section){
+async function tipTopSelect(button,section){
  document.querySelectorAll("#tipTopTabs .tip-tabs button").forEach(b=>b.classList.remove("active"));
  button.classList.add("active");
+ const feed=document.getElementById("feed");
+ const cards=[...feed.querySelectorAll(".tip")];
  if(section==="LIVE"){tipToast("LIVE: próximamente vas a poder transmitir en vivo.");return;}
- if(section==="SIGUIENDO"){tipToast("La sección Siguiendo estará disponible cuando incorporemos perfiles y seguimiento.");return;}
+ if(section==="SIGUIENDO"){
+  if(!usuario){tipToast("Iniciá sesión para ver los creadores que seguís.");return;}
+  const {data,error}=await db.from("tip_follows").select("followed_id").eq("follower_id",usuario.id);
+  if(error){tipToast("No se pudo cargar tu seguimiento: "+error.message);return;}
+  const ids=(data||[]).map(x=>x.followed_id);
+  cards.forEach(card=>card.style.display=ids.includes(card.dataset.creator)?"":"none");
+  let aviso=document.getElementById("tipFollowingEmpty");
+  if(!ids.length||!cards.some(card=>ids.includes(card.dataset.creator))){
+   if(!aviso){aviso=document.createElement("div");aviso.id="tipFollowingEmpty";aviso.className="panel";feed.prepend(aviso);}
+   aviso.textContent=ids.length?"Todavía no hay publicaciones recientes de las personas que seguís.":"Todavía no seguís a ningún creador. Entrá en Creadores o tocá SEGUIR en una publicación.";
+   aviso.style.display="block";
+  }else if(aviso){aviso.style.display="none";}
+  return;
+ }
+ cards.forEach(card=>card.style.display="");
+ const aviso=document.getElementById("tipFollowingEmpty");if(aviso)aviso.style.display="none";
  if(section==="COMUNIDAD"){tipToast("Estás viendo los consejos de toda la comunidad.");return;}
  tipToast("Tu selección Para ti está activa.");
 }
@@ -1416,7 +1433,7 @@ async function cargarTips(){
   const v=conteo[t.id]||{like:0,useful:0,mios:[]};
   const video=t.video_path ? db.storage.from("tip-videos").getPublicUrl(t.video_path).data.publicUrl : "";
   const esFavorito=obtenerFavoritos().includes(t.id);
-  return `<article class="tip">
+  return `<article class="tip" data-creator="${t.user_id}">
    <div class="category">${escapar(t.category)}</div>
       <div class="muted">
     <button class="light" onclick="verPerfilPublico('${t.user_id}')">
