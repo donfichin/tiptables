@@ -1018,6 +1018,7 @@ let usuario = null;
 let publicaciones = [];
 let archivoVideo = null;
 let cargaTipsId = 0;
+let tipFollowingIds = [];
 
 function seleccionarVideo(campo){
  const archivo=campo.files[0];
@@ -1178,7 +1179,8 @@ async function verPerfilPublico(userId){
  const {data:perfil}=await db.from("profiles").select("display_name,username,bio").eq("user_id",userId).maybeSingle();
  const {data:tips}=await db.from("tips").select("title,category").eq("user_id",userId).order("created_at",{ascending:false}).limit(10);
  const nombre=perfil?.display_name||perfil?.username||"Miembro de TIPNOVA";
- card.innerHTML='<div class="profile-avatar">♙</div><h2>'+escapar(nombre)+'</h2>'+(perfil?.bio?'<p>'+escapar(perfil.bio)+'</p>':'')+'<h3>Consejos publicados</h3>'+((tips||[]).map(t=>'<div class="comment"><strong>'+escapar(t.title)+'</strong><br><small>'+escapar(t.category)+'</small></div>').join("")||'<p>Este creador todavía no tiene publicaciones.</p>')+'<button class="secondary" onclick="tipCloseProfile()">Volver al feed</button>';
+ const esMio=usuario?.id===userId, siguiendo=tipFollowingIds.includes(userId);
+ card.innerHTML='<div class="profile-avatar">♙</div><h2>'+escapar(nombre)+'</h2>'+(perfil?.bio?'<p>'+escapar(perfil.bio)+'</p>':'')+(esMio?'':'<button onclick="tipFollowCreator(\''+userId+'\',event)">'+(siguiendo?'✓ SIGUIENDO · DEJAR DE SEGUIR':'＋ SEGUIR A ESTE CREADOR')+'</button>')+'<h3>Consejos publicados</h3>'+((tips||[]).map(t=>'<div class="comment"><strong>'+escapar(t.title)+'</strong><br><small>'+escapar(t.category)+'</small></div>').join("")||'<p>Este creador todavía no tiene publicaciones.</p>')+'<button class="secondary" onclick="tipCloseProfile()">Volver al feed</button>';
 }
 function tipOpenCreate(){tipSetActiveNav("navCrear");
  if(!usuario){tipOpenAccount();tipToast("Ingresá para compartir tu video");return;}
@@ -1264,10 +1266,24 @@ function tipFilterCreators(){
 }
 function tipCloseFriends(){document.getElementById("tipFriendsOverlay").classList.remove("open");tipSetActiveNav("navHome");}
 
-function tipFollowCreator(userId,event){
+async function tipFollowCreator(userId,event){
  if(event){event.preventDefault();event.stopPropagation();}
- if(!usuario){tipToast("Para seguir creadores, primero iniciá sesión. El video sigue en pantalla.");return false;}
- tipToast("El seguimiento todavía está en preparación. No se modificó tu muro.");
+ if(!usuario){tipToast("Para seguir creadores, primero iniciá sesión.");return false;}
+ if(userId===usuario.id){tipToast("Ese es tu propio perfil.");return false;}
+ const siguiendo=tipFollowingIds.includes(userId);
+ const {error}=siguiendo
+  ? await db.from("tip_follows").delete().eq("follower_id",usuario.id).eq("followed_id",userId)
+  : await db.from("tip_follows").insert({follower_id:usuario.id,followed_id:userId});
+ if(error){tipToast("No se pudo actualizar el seguimiento: "+error.message);return false;}
+ tipFollowingIds=siguiendo?tipFollowingIds.filter(id=>id!==userId):[...tipFollowingIds,userId];
+ document.querySelectorAll("#feed .tip-follow").forEach(b=>{
+  if(b.dataset.creator===userId){
+   b.classList.toggle("is-following",!siguiendo);
+   b.innerHTML=!siguiendo?'<span class="tip-follow-symbol">✓</span><span>SIGUIENDO</span>':'<span class="tip-follow-symbol">＋</span><span>SEGUIR</span>';
+  }
+ });
+ if(document.getElementById("tipProfileOverlay").classList.contains("open"))verPerfilPublico(userId);
+ tipToast(siguiendo?"Dejaste de seguir a este creador.":"Ahora seguís a este creador.");
  return false;
 }
 function tipOpenMessages(){tipSetActiveNav("navMessages");tipToast("Mensajes: estamos preparando el chat privado.");}
@@ -1370,6 +1386,13 @@ async function cargarTips(){
  if(cargaActual!==cargaTipsId)return;
  if(error){feed.innerHTML='<div class="panel">No se pudieron cargar los tips: '+escapar(error.message)+'</div>';return;}
  publicaciones=data||[];
+ tipFollowingIds=[];
+ if(usuarioActual){
+  const {data:seguimientos,error:followError}=await db.from("tip_follows").select("followed_id").eq("follower_id",usuarioActual.id);
+  if(cargaActual!==cargaTipsId)return;
+  if(followError){feed.innerHTML='<div class="panel">No se pudieron cargar los seguimientos: '+escapar(followError.message)+'</div>';return;}
+  tipFollowingIds=(seguimientos||[]).map(f=>f.followed_id);
+ }
  if(!publicaciones.length){feed.innerHTML='<div class="panel">Todavía no hay publicaciones. ¡Sé el primero en compartir un TIP!</div>';return;}
  const ids=[...new Set(publicaciones.map(t=>t.user_id).filter(Boolean))];
  const {data:perfiles}=await db.from("profiles")
@@ -1409,7 +1432,7 @@ async function cargarTips(){
     <button type="button" id="fav-${t.id}" data-tip="${t.id}" class="tip-favorite ${esFavorito?"is-saved":""}" aria-pressed="${esFavorito}" onclick="alternarFavorito(this.dataset.tip)">${esFavorito?"🔖 GUARDADO":"♧ GUARDAR EN FAVORITOS"}</button>
    </div>
    <div class="actions">
-     <button class="tip-follow" onclick="return tipFollowCreator('${t.user_id}',event)"><span class="tip-follow-symbol">＋</span><span>SEGUIR</span></button>
+     <button class="tip-follow ${tipFollowingIds.includes(t.user_id)?"is-following":""}" data-creator="${t.user_id}" onclick="return tipFollowCreator('${t.user_id}',event)">${tipFollowingIds.includes(t.user_id)?'<span class="tip-follow-symbol">✓</span><span>SIGUIENDO</span>':'<span class="tip-follow-symbol">＋</span><span>SEGUIR</span>'}</button>
     <button class="tip-useful ${v.mios.includes("useful")?"is-selected":" "} " aria-pressed="${v.mios.includes("useful")}" onclick="votar('${t.id}','useful')">${v.mios.includes("useful")?"✓ TE SIRVIÓ":"＋ ME SIRVIÓ"} · ${v.useful||0}</button>
     <button class="tip-like ${v.mios.includes("like")?"is-selected":" "} " aria-pressed="${v.mios.includes("like")}" onclick="votar('${t.id}','like')">${v.mios.includes("like")?"♥ TE GUSTA":"♡ ME GUSTA"} · ${v.like||0}</button>
     <button class="tip-comment light" onclick="toggleComentarios('${t.id}')">💬 COMENTAR · ${cantComentarios[t.id]||0}</button>
