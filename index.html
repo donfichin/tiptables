@@ -1433,7 +1433,7 @@ async function cargarTips(){
   const v=conteo[t.id]||{like:0,useful:0,mios:[]};
   const video=t.video_path ? db.storage.from("tip-videos").getPublicUrl(t.video_path).data.publicUrl : "";
   const esFavorito=obtenerFavoritos().includes(t.id);
-  return `<article class="tip" data-creator="${t.user_id}">
+  return `<article class="tip" id="tip-${escapar(t.id)}" tabindex="-1" data-creator="${t.user_id}">
    <div class="category">${escapar(t.category)}</div>
       <div class="muted">
     <button class="light" onclick="verPerfilPublico('${t.user_id}')">
@@ -1457,7 +1457,27 @@ async function cargarTips(){
    <div id="comentarios-${t.id}"></div>
   </article>`;
  }).join("");
+ if(location.hash.startsWith("#tip-")) setTimeout(irATipCompartido,100);
 }
+function irATipCompartido(){
+ if(!location.hash.startsWith("#tip-"))return;
+ let tipId;
+ try{tipId=decodeURIComponent(location.hash.slice(5));}catch(e){return;}
+ if(!tipId)return;
+ const tarjeta=document.getElementById("tip-"+tipId);
+ if(!tarjeta){tipToast("No encontramos esa publicación. Puede que ya no esté disponible.");return;}
+ tarjeta.scrollIntoView({behavior:"smooth",block:"center"});
+ tarjeta.style.outline="3px solid #25b99a";
+ tarjeta.style.outlineOffset="5px";
+ tarjeta.focus({preventScroll:true});
+ setTimeout(()=>{tarjeta.style.outline="";tarjeta.style.outlineOffset="";},3500);
+}
+window.addEventListener("hashchange",async()=>{
+ if(location.hash.startsWith("#tip-")){
+  await cargarTips();
+  irATipCompartido();
+ }
+});
 async function votar(tipId,tipo){
  if(!usuario){alert("Iniciá sesión para votar.");return;}
  const {data,error}=await db.from("tip_votes").select("id").eq("tip_id",tipId).eq("user_id",usuario.id).eq("vote_type",tipo).maybeSingle();
