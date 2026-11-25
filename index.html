@@ -924,6 +924,19 @@ html,body,main{background:#101b22!important}
 #tipTopTabs .tip-brand-name span{color:#ffd166!important}
 @media(max-width:390px){#tipTopTabs .tip-brand img{width:24px!important;height:24px!important}#tipTopTabs .tip-brand-name{font-size:9px!important}}
 
+/* TIPNOVA v25: centrar verticalmente el símbolo del botón Seguir */
+#feed .tip .actions .tip-follow{gap:2px!important}
+#feed .tip .actions .tip-follow .tip-follow-symbol{display:block!important;position:relative!important;top:3px!important;font-size:27px!important;line-height:1!important;font-weight:900!important}
+#feed .tip .actions .tip-follow span:not(.tip-follow-symbol){display:block!important;font-size:13px!important;line-height:1.1!important}
+
+
+/* TIPNOVA v26: guardar favoritos sin descargar archivos */
+#feed .tip .tip-tools .tip-favorite{background:#fff4d8!important;border:1px solid #e8c66d!important;color:#553d08!important}
+#feed .tip .tip-tools .tip-favorite.is-saved{background:#dff7ed!important;border:2px solid #62c5a3!important;color:#075342!important}
+
+
+/* TIPNOVA v27: recargas del feed sin carreras y navegación activa más visible */
+
 </style>
 </head>
 <body>
@@ -1599,17 +1612,3 @@ if ("serviceWorker" in navigator) {
 </script>
 </body>
 </html>
-
-
-/* TIPNOVA v25: centrar verticalmente el símbolo del botón Seguir */
-#feed .tip .actions .tip-follow{gap:2px!important}
-#feed .tip .actions .tip-follow .tip-follow-symbol{display:block!important;position:relative!important;top:3px!important;font-size:27px!important;line-height:1!important;font-weight:900!important}
-#feed .tip .actions .tip-follow span:not(.tip-follow-symbol){display:block!important;font-size:13px!important;line-height:1.1!important}
-
-
-/* TIPNOVA v26: guardar favoritos sin descargar archivos */
-#feed .tip .tip-tools .tip-favorite{background:#fff4d8!important;border:1px solid #e8c66d!important;color:#553d08!important}
-#feed .tip .tip-tools .tip-favorite.is-saved{background:#dff7ed!important;border:2px solid #62c5a3!important;color:#075342!important}
-
-
-/* TIPNOVA v27: recargas del feed sin carreras y navegación activa más visible */
