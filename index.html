@@ -1007,8 +1007,13 @@ function mostrarEstadoSesion(session){
 }
 async function actualizarSesion(){
  const {data,error}=await db.auth.getSession();
- if(error){mensaje("No se pudo comprobar la sesión: "+error.message);return;}
+ if(error){
+  mensaje("No se pudo comprobar la sesión: "+error.message);
+  await cargarTips();
+  return;
+ }
  mostrarEstadoSesion(data.session);
+ await cargarTips();
 }
 
 async function mostrarPerfil(){
@@ -1536,7 +1541,6 @@ db.auth.onAuthStateChange((event,session)=>{
  if(event==="SIGNED_IN"||event==="SIGNED_OUT") cargarTips();
 });
 actualizarSesion();
-cargarTips();
 // El ingreso requiere una acción explícita sobre «Entrar a TIPNOVA».
 // No iniciar sesión al seleccionar una sugerencia del navegador ni al pulsar Enter.
 </script>
