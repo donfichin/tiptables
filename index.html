@@ -1006,14 +1006,22 @@ function mostrarEstadoSesion(session){
  }
 }
 async function actualizarSesion(){
- const {data,error}=await db.auth.getSession();
- if(error){
-  mensaje("No se pudo comprobar la sesión: "+error.message);
+ // Mostrar el muro sin esperar a que Supabase termine de recuperar la sesión.
+ // Si la sesión existe, volver a cargar para incluir los datos del usuario.
+ const cargaInicial=cargarTips();
+ try{
+  const {data,error}=await db.auth.getSession();
+  if(error){
+   mensaje("No se pudo comprobar la sesión: "+error.message);
+   await cargaInicial;
+   return;
+  }
+  mostrarEstadoSesion(data.session);
   await cargarTips();
-  return;
+ }catch(e){
+  mensaje("No se pudo comprobar la sesión: "+(e?.message||e));
+  await cargaInicial;
  }
- mostrarEstadoSesion(data.session);
- await cargarTips();
 }
 
 async function mostrarPerfil(){
