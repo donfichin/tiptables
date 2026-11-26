@@ -1,0 +1,31 @@
+name: TIPNOVA Supabase keepalive
+
+on:
+  schedule:
+    - cron: "17 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send a small read request to the public tips table
+        env:
+          SUPABASE_URL: https://cladndfqixbnccssvtwn.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_lb6YgxGM1UCT_i3tSbj19w_xRzZdOCz
+        run: |
+          set -eu
+          status=$(curl --silent --show-error --output /tmp/supabase-response.json --write-out "%{http_code}" \
+            "$SUPABASE_URL/rest/v1/tips?select=id&limit=1" \
+            -H "apikey: $SUPABASE_PUBLISHABLE_KEY" \
+            -H "Accept: application/json")
+          echo "Supabase REST response: HTTP $status"
+          if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
+            echo "Supabase keepalive request failed."
+            cat /tmp/supabase-response.json
+            exit 1
+          fi
+          echo "Supabase answered successfully."
